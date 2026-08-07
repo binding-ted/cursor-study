@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cursor 精讲课件 · 案例驱动 2 小时深入</title>
+<style>
+:root{
+  /* 字号层级：固定 6 级，全站只用这些 */
+  --fs-h1: 30px;
+  --fs-h2: 22px;
+  --fs-h3: 16.5px;
+  --fs-md: 15px;
+  --fs-sm: 13px;
+  --fs-xs: 11.5px;
+
+  --font: -apple-system,"Segoe UI","Microsoft YaHei",system-ui,sans-serif;
+  --mono: "Cascadia Code","JetBrains Mono",Consolas,monospace;
+
+  /* 底色 */
+  --bg: #0b1017;
+  --bg2: #0f1622;
+  --panel: #121a28;
+  --panel2: #0e1523;
+  --line: #1e2a3d;
+  --line2: #2a3a54;
+
+  /* 文字 */
+  --ink: #eaf0fa;
+  --ink2: #c4d0e4;
+  --muted: #8393ad;
+  --faint: #5a6a86;
+
+  /* 主强调（唯一主色） */
+  --accent: #4f8cff;
+  --accent-ink: #a9c8ff;
+
+  /* 统一高亮系统：4 个语义色，背景亮度保持一致，文字都用亮色 */
+  --hi-ink: #eef3fb;
+  --hi: #1e3a5f;        /* 信息/关键词（蓝） */
+  --ok-bg:#17402a; --ok-line:#2f6b46; --ok-ink:#a7f3c8;    /* 正确/成功 */
+  --warn-bg:#3a3016; --warn-line:#6b5a2f; --warn-ink:#f5dca0; /* 注意 */
+  --danger-bg:#3a1e22; --danger-line:#6b3a40; --danger-ink:#f5b0b8; /* 危险/错误 */
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font);
+  font-size:var(--fs-md);
+  line-height:1.7;
+  color:var(--ink2);
+  background:var(--bg);
+}
+b{color:var(--ink);font-weight:700;}
+code{font-family:var(--mono);font-size:.9em;background:#0a1220;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#cfe0ff;}
+a{color:var(--accent-ink);text-decoration:none;border-bottom:1px dashed #3a5580;}
+a:hover{color:#fff;border-bottom-color:var(--accent);}
+
+/* 统一高亮：mark（亮度一致） */
+.mark{background:var(--hi);color:var(--hi-ink);padding:1px 6px;border-radius:5px;font-weight:600;}
+.mark.ok{background:var(--ok-bg);color:var(--ok-ink);}
+.mark.warn{background:var(--warn-bg);color:var(--warn-ink);}
+.mark.danger{background:var(--danger-bg);color:var(--danger-ink);}
+.kbd{font-family:var(--mono);font-size:.8em;font-weight:700;background:#12203a;border:1px solid var(--line2);border-bottom-width:2px;border-radius:5px;padding:1px 7px;color:#cfe0ff;white-space:nowrap;}
+
+/* 布局：左侧竖直导航 + 右侧内容 */
+.wrap{display:flex;min-height:100vh;}
+.side{
+  width:250px;flex:none;background:var(--panel2);border-right:1px solid var(--line);
+  position:sticky;top:0;height:100vh;overflow-y:auto;padding:16px 12px;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:10px;}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#4f8cff,#7b5cff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:18px;}
+.brand .tt{font-size:var(--fs-sm);color:var(--ink);font-weight:800;line-height:1.25;}
+.brand .tt span{display:block;color:var(--muted);font-weight:500;font-size:var(--fs-xs);}
+.nav a{
+  display:flex;gap:10px;align-items:flex-start;border:0;
+  padding:9px 10px;border-radius:9px;color:var(--ink2);cursor:pointer;
+  font-size:var(--fs-sm);line-height:1.35;margin-bottom:2px;
+}
+.nav a .no{color:var(--faint);font-family:var(--mono);font-size:var(--fs-xs);width:20px;flex:none;padding-top:1px;}
+.nav a:hover{background:#152036;color:var(--ink);}
+.nav a.on{background:linear-gradient(90deg,#1a2c4d,#152036);color:#fff;box-shadow:inset 2px 0 0 var(--accent);}
+.nav a.on .no{color:var(--accent-ink);}
+.nav .grp{font-size:var(--fs-xs);color:var(--faint);letter-spacing:.12em;padding:12px 10px 4px;text-transform:uppercase;}
+
+.main{flex:1;min-width:0;padding:30px 40px 90px;max-width:1000px;margin:0 auto;}
+section{display:none;animation:fade .35s ease;}
+section.on{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.eyebrow{display:inline-block;font-size:var(--fs-xs);letter-spacing:.14em;color:var(--accent-ink);background:#12203a;border:1px solid var(--line2);padding:3px 11px;border-radius:999px;text-transform:uppercase;}
+h1{font-size:var(--fs-h1);color:#fff;margin:14px 0 6px;line-height:1.2;letter-spacing:-.01em;}
+h1 .en{display:block;font-size:var(--fs-sm);color:var(--muted);font-weight:500;letter-spacing:.02em;margin-top:6px;}
+h2{font-size:var(--fs-h2);color:#fff;margin:34px 0 12px;padding-top:8px;display:flex;align-items:center;gap:10px;}
+h2 .dot{width:8px;height:22px;border-radius:3px;background:linear-gradient(180deg,#4f8cff,#7b5cff);flex:none;}
+h3{font-size:var(--fs-h3);color:var(--ink);margin:22px 0 8px;}
+p{margin:8px 0;}
+.lead{font-size:var(--fs-md);color:var(--ink2);}
+ul,ol{margin:8px 0;padding-left:22px;}
+li{margin:5px 0;}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;}
+.grid{display:grid;gap:14px;}
+.g2{grid-template-columns:1fr 1fr;}
+.g3{grid-template-columns:repeat(3,1fr);}
+@media(max-width:820px){.g2,.g3{grid-template-columns:1fr;}}
+
+/* 统一 callout：4 种语义，边框/背景亮度一致 */
+.callout{border-radius:12px;padding:13px 16px;margin:14px 0;border:1px solid;font-size:var(--fs-sm);line-height:1.65;}
+.callout .h{font-weight:800;margin-bottom:3px;display:flex;gap:7px;align-items:center;}
+.callout.info{background:#101d33;border-color:#25406b;}
+.callout.info .h{color:var(--accent-ink);}
+.callout.ok{background:var(--ok-bg);border-color:var(--ok-line);}
+.callout.ok .h{color:var(--ok-ink);}
+.callout.warn{background:var(--warn-bg);border-color:var(--warn-line);}
+.callout.warn .h{color:var(--warn-ink);}
+.callout.danger{background:var(--danger-bg);border-color:var(--danger-line);}
+.callout.danger .h{color:var(--danger-ink);}
+
+/* 讲解要点条 */
+.speak{background:linear-gradient(90deg,#141d2e,#111826);border:1px dashed var(--line2);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:var(--fs-sm);}
+.speak .h{color:var(--accent-ink);font-weight:800;margin-bottom:4px;}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:var(--fs-sm);}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
+th{background:#101a2c;color:var(--ink);font-weight:700;}
+tr:nth-child(even) td{background:#0e1523;}
+
+/* 步骤块 */
+.steps{counter-reset:s;margin:12px 0;padding:0;list-style:none;}
+.steps>li{counter-increment:s;position:relative;padding:10px 12px 10px 46px;margin:8px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;font-size:var(--fs-sm);}
+.steps>li::before{content:counter(s);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#4f8cff,#7b5cff);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:var(--fs-sm);}
+
+/* pill 徽章 */
+.pill{display:inline-block;font-size:var(--fs-xs);font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);background:#101a2c;}
+.pill.blue{color:var(--accent-ink);border-color:#2b4c80;}
+.pill.green{color:var(--ok-ink);border-color:var(--ok-line);background:var(--ok-bg);}
+.pill.amber{color:var(--warn-ink);border-color:var(--warn-line);background:var(--warn-bg);}
+
+/* ===== 演示引擎 v2 ===== */
+.demo{background:linear-gradient(180deg,#0f1826,#0c1320);border:1px solid var(--line2);border-radius:16px;overflow:hidden;margin:16px 0;}
+.demo-hd{padding:12px 18px;border-bottom:1px solid var(--line);background:#0d1626;}
+.demo-hd .t{font-weight:800;color:#fff;font-size:var(--fs-md);}
+.demo-hd .s{font-size:var(--fs-xs);color:var(--muted);}
+.demo-stage{padding:16px 18px;min-height:120px;display:flex;flex-direction:column;gap:10px;max-height:680px;overflow-y:auto;}
+.demo-ctrl{display:flex;align-items:center;gap:8px;padding:12px 18px;border-top:1px solid var(--line);background:#0d1626;flex-wrap:wrap;}
+.demo-play{background:linear-gradient(180deg,#22c55e,#16a34a);border:0;color:#04240f;border-radius:9px;padding:9px 16px;font:inherit;font-size:var(--fs-sm);font-weight:800;cursor:pointer;}
+.demo-play.playing{background:linear-gradient(180deg,#f59e0b,#d97706);color:#2a1c02;}
+.demo-next{background:#16233d;border:1px solid var(--line2);color:#dbe6fb;border-radius:9px;padding:9px 16px;font:inherit;font-size:var(--fs-sm);font-weight:700;cursor:pointer;}
+.demo-next:hover:not(:disabled){background:#1d3050;}
+.demo-next:disabled{opacity:.4;cursor:not-allowed;}
+.demo-reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:9px 14px;font:inherit;font-size:var(--fs-sm);cursor:pointer;}
+.demo-reset:hover{color:var(--ink);border-color:var(--line2);}
+.demo-n{margin-left:auto;font-size:var(--fs-xs);color:var(--muted);font-family:var(--mono);}
+.demo-stage>*{animation:beatIn .3s ease;}
+@keyframes beatIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* 对话气泡 */
+.msg{display:flex;gap:10px;max-width:92%;}
+.msg .av{width:26px;height:26px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.msg.user .av{background:#2b4c80;color:#dce9ff;}
+.msg.user .bub{background:#1a3050;border:1px solid #2b4c80;color:#eaf1ff;}
+.msg.ai .av{background:linear-gradient(135deg,#4f8cff,#7b5cff);color:#fff;}
+.msg .bub{background:#111c2e;border:1px solid var(--line2);border-radius:12px;padding:9px 13px;font-size:var(--fs-sm);line-height:1.6;}
+.msg .bub .tag{font-size:var(--fs-xs);color:var(--muted);display:block;margin-bottom:2px;}
+
+/* 旁白/结果 */
+.beat-note{font-size:var(--fs-sm);color:var(--ink2);background:#101a2c;border-left:3px solid var(--accent);border-radius:8px;padding:9px 13px;}
+.beat-note.ok{border-left-color:var(--ok-line);background:var(--ok-bg);color:var(--ok-ink);}
+.beat-note.warn{border-left-color:var(--warn-line);background:var(--warn-bg);color:var(--warn-ink);}
+.beat-note.danger{border-left-color:var(--danger-line);background:var(--danger-bg);color:var(--danger-ink);}
+.beat-result{border-radius:12px;border:1px solid var(--ok-line);background:linear-gradient(180deg,#12281c,#0e1f16);padding:12px 14px;}
+.beat-result.warn{border-color:var(--warn-line);background:linear-gradient(180deg,#2a2411,#1c1808);}
+.beat-result.danger{border-color:var(--danger-line);background:linear-gradient(180deg,#2a1418,#1c0d10);}
+.beat-result .rh{font-size:var(--fs-xs);font-weight:800;letter-spacing:.04em;margin-bottom:7px;color:var(--ok-ink);}
+.beat-result.warn .rh{color:var(--warn-ink);}
+.beat-result.danger .rh{color:var(--danger-ink);}
+
+/* 分叉选择 */
+.beat-choice{background:#101a2c;border:1px dashed var(--line2);border-radius:12px;padding:12px 14px;}
+.beat-choice .q{font-size:var(--fs-sm);color:var(--ink);font-weight:700;margin-bottom:9px;}
+.beat-choice .opts{display:flex;flex-wrap:wrap;gap:8px;}
+.beat-choice button{background:#16233d;border:1px solid var(--line2);color:#dbe6fb;border-radius:9px;padding:8px 14px;font:inherit;font-size:var(--fs-sm);cursor:pointer;}
+.beat-choice button:hover{background:#1d3050;border-color:var(--accent);}
+
+/* 代码编辑器模拟（Tab / Ctrl+K） */
+.simcode{font-family:var(--mono);font-size:12.5px;background:#0a1220;border:1px solid var(--line2);border-radius:10px;overflow:hidden;}
+.simcode .sh{background:#0e1a30;padding:6px 12px;font-family:var(--font);font-size:var(--fs-xs);color:var(--muted);border-bottom:1px solid var(--line);}
+.simcode .cl{display:flex;gap:12px;padding:2px 12px;color:#c7d3ea;white-space:pre-wrap;word-break:break-word;}
+.simcode .cl .n{color:#3b496b;width:20px;text-align:right;user-select:none;flex:none;}
+.simcode .cl.sel{background:#17284a;}
+.gh{color:#5b6b8f;font-style:italic;}
+.gh.solid{color:#a7f3c8;font-style:normal;background:#132e1f;border-radius:4px;padding:0 3px;}
+.caret{display:inline-block;width:2px;height:1.05em;background:#7fb0ff;vertical-align:-2px;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+.keycap{display:inline-block;margin-left:8px;font-family:var(--font);font-size:var(--fs-xs);font-weight:800;background:#12203a;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:1px 8px;color:#cfe0ff;}
+.keycap.done{background:var(--ok-bg);color:var(--ok-ink);border-color:var(--ok-line);}
+.kbox{margin-top:8px;background:#0b1526;border:1px solid var(--accent);border-radius:8px;padding:8px 11px;font-family:var(--font);font-size:var(--fs-sm);color:#d7e3fb;}
+.kbox .kt{font-size:var(--fs-xs);color:var(--accent-ink);font-weight:800;margin-bottom:3px;display:flex;gap:6px;align-items:center;}
+
+/* diff */
+.diff{font-family:var(--mono);font-size:12.5px;background:#0a1220;border:1px solid var(--line2);border-radius:10px;overflow:hidden;}
+.diff .fh{background:#0e1a30;padding:6px 12px;font-family:var(--font);font-size:var(--fs-xs);color:var(--muted);border-bottom:1px solid var(--line);}
+.diff .dl{padding:2px 12px;white-space:pre-wrap;word-break:break-word;}
+.diff .dl.ctx{color:#7f8ca6;}
+.diff .dl.add{background:#0f2a18;color:#a7f3c8;}
+.diff .dl.del{background:#2a1418;color:#f5b0b8;}
+.diff .dl.add::before{content:"+ ";color:#4ea373;}
+.diff .dl.del::before{content:"- ";color:#c76b74;}
+.diff .dl.ctx::before{content:"  ";}
+
+/* 文件预览 */
+.file-preview{background:#0a1220;border:1px solid var(--line2);border-radius:10px;overflow:hidden;font-size:var(--fs-sm);}
+.file-preview .fh{background:#0e1a30;padding:6px 12px;font-size:var(--fs-xs);color:var(--muted);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;}
+.file-preview .fb{padding:10px 13px;line-height:1.6;color:#d3ddef;}
+.file-preview .fb .li{padding:1px 0;}
+
+/* 迷你表 */
+.mini-tbl{width:100%;border-collapse:collapse;font-size:var(--fs-xs);}
+.mini-tbl th,.mini-tbl td{border:1px solid var(--line);padding:5px 9px;}
+.mini-tbl th{background:#0e1a30;}
+.mini-tbl td.newcol{background:var(--ok-bg);color:var(--ok-ink);}
+
+/* Canvas 模拟 · 完整看板 */
+.canvasim{background:#0c1424;border:1px solid var(--line2);border-radius:12px;overflow:hidden;}
+.canvasim .ch{background:linear-gradient(90deg,#13223d,#0e1830);padding:8px 14px;font-size:var(--fs-xs);color:var(--accent-ink);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.canvasim .ch .ver{font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--muted);background:#101a2c;}
+.canvasim .ch .ver.on{border-color:var(--ok-line);color:var(--ok-ink);background:var(--ok-bg);}
+.canvasim .cbody{padding:14px;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr);}}
+.kpi{background:#0f1a2e;border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;}
+.kpi.new{border-color:var(--ok-line);background:var(--ok-bg);box-shadow:0 0 0 1px rgba(74,222,128,.15);}
+.kpi .l{font-size:var(--fs-xs);color:var(--muted);margin-bottom:2px;}
+.kpi.new .l{color:var(--ok-ink);}
+.kpi .v{font-size:20px;color:#fff;font-weight:800;line-height:1.2;}
+.kpi.new .v{color:var(--ok-ink);}
+.kpi .d{font-size:var(--fs-xs);margin-top:2px;}
+.up{color:#7ee6a8;}.down{color:#f5a0a8;}
+.canvas-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;}
+@media(max-width:720px){.canvas-grid{grid-template-columns:1fr;}}
+.panel{background:#0a1220;border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0;}
+.panel .ph{font-size:var(--fs-xs);color:var(--muted);font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.panel .ph .tag{font-size:10px;padding:1px 7px;border-radius:999px;background:#152036;border:1px solid var(--line2);color:var(--accent-ink);}
+.panel .ph .tag.flash{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink);}
+/* 柱状图（像素高度，避免 % 塌陷） */
+.chart{display:flex;gap:8px;align-items:stretch;}
+.chart .ya{display:flex;flex-direction:column;justify-content:space-between;font-size:10px;color:var(--faint);width:36px;text-align:right;flex-shrink:0;height:140px;padding-top:2px;}
+.chart .plot-wrap{flex:1;min-width:0;}
+.chart .plot{position:relative;height:140px;border-left:1px solid var(--line2);border-bottom:1px solid var(--line2);}
+.chart .glines{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;}
+.chart .glines i{display:block;border-top:1px dashed rgba(127,140,166,.25);height:0;}
+.chart .cols{position:absolute;inset:0 6px 0 10px;display:flex;align-items:flex-end;gap:12px;}
+.chart .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;}
+.chart .col .val{font-size:10px;color:#c5d4f0;font-weight:700;margin-bottom:3px;white-space:nowrap;}
+.chart .col .bx{width:72%;max-width:52px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#6ba3ff,#3a63b8);box-shadow:0 0 16px rgba(79,140,255,.25);animation:barGrow .55s ease;transform-origin:bottom;}
+.chart .col .bx.new{background:linear-gradient(180deg,#5eead4,#0d9488);box-shadow:0 0 16px rgba(45,212,191,.3);}
+.chart .col .bx.hi{outline:2px solid #7ee6a8;outline-offset:1px;}
+.chart .xlabels{display:flex;gap:12px;padding:6px 6px 0 10px;}
+.chart .xlabels span{flex:1;text-align:center;font-size:11px;color:var(--muted);}
+@keyframes barGrow{from{transform:scaleY(0);}to{transform:scaleY(1);}}
+/* 明细表 */
+.ctbl{width:100%;border-collapse:collapse;font-size:12px;}
+.ctbl th,.ctbl td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;}
+.ctbl th:first-child,.ctbl td:first-child{text-align:left;}
+.ctbl th{color:var(--muted);font-weight:700;font-size:11px;background:#0e1a30;}
+.ctbl td{color:#d7e3fb;}
+.ctbl tr:last-child td{border-bottom:0;}
+.ctbl td.newcol{background:rgba(34,197,94,.12);color:var(--ok-ink);font-weight:800;}
+.ctbl th.newcol{background:rgba(34,197,94,.18);color:var(--ok-ink);}
+.ctbl tr.hi td{background:rgba(79,140,255,.08);}
+/* 区域横向条 */
+.rbar{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;}
+.rbar .nm{width:42px;color:var(--muted);flex-shrink:0;}
+.rbar .track{flex:1;height:10px;background:#152036;border-radius:999px;overflow:hidden;}
+.rbar .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#4f8cff,#7b5cff);animation:barGrow .5s ease;}
+.rbar .n{width:48px;text-align:right;color:#c5d4f0;font-weight:700;font-size:11px;}
+.canvas-foot{margin-top:10px;font-size:11px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+
+/* 场地标签 */
+.venue{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-xs);font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid #2b4c80;background:#12203a;color:var(--accent-ink);margin-bottom:8px;}
+.venue.ide{border-color:var(--warn-line);background:var(--warn-bg);color:var(--warn-ink);}
+
+/* Agents Window 模拟 */
+.awin{border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#0c1320;margin:14px 0;box-shadow:0 12px 40px rgba(0,0,0,.4);}
+.awin .titlebar{background:#0e1626;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.awin .dots{display:flex;gap:6px;}
+.awin .dots i{width:11px;height:11px;border-radius:50%;display:block;}
+.awin .tt{font-size:var(--fs-xs);color:var(--muted);}
+.awin .switch{margin-left:auto;font-size:var(--fs-xs);padding:4px 10px;border-radius:7px;border:1px solid var(--line2);background:#101a2c;color:var(--ink2);cursor:pointer;font-weight:700;}
+.awin .switch:hover{border-color:var(--accent);color:#fff;}
+.awin .body{display:grid;grid-template-columns:168px 1fr 200px;min-height:340px;}
+.awin .col{border-right:1px solid var(--line);padding:10px;display:flex;flex-direction:column;min-height:0;}
+.awin .col:last-child{border-right:0;}
+.awin .col .lbl{font-size:var(--fs-xs);color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.agent-list{display:flex;flex-direction:column;gap:4px;}
+.agent-list .ag{padding:8px 9px;border-radius:8px;cursor:pointer;font-size:var(--fs-sm);color:var(--ink2);border:1px solid transparent;}
+.agent-list .ag:hover{background:#152036;}
+.agent-list .ag.on{background:#152036;border-color:var(--line2);color:#fff;}
+.agent-list .ag .nm{font-weight:700;display:block;}
+.agent-list .ag .st{font-size:var(--fs-xs);color:var(--muted);}
+.agent-list .ag .st.ok{color:var(--ok-ink);}
+.agent-list .ag .st.run{color:var(--warn-ink);}
+.aw-main{background:#0a111d;}
+.modebar{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.modebar button{flex:1;min-width:52px;font-size:var(--fs-xs);padding:5px 4px;border-radius:7px;border:1px solid var(--line2);background:#101a2c;color:var(--ink2);cursor:pointer;font-weight:700;}
+.modebar button.on{background:linear-gradient(135deg,#4f8cff,#7b5cff);color:#fff;border-color:transparent;}
+.modebar button[data-m="debug"].on{background:linear-gradient(135deg,#ef4444,#b91c1c);}
+.modebar button[data-m="plan"].on{background:linear-gradient(135deg,#f59e0b,#d97706);color:#1a1200;}
+.modebar button[data-m="ask"].on{background:linear-gradient(135deg,#22c55e,#16a34a);color:#04240f;}
+.chatlog{flex:1;overflow-y:auto;font-size:var(--fs-sm);display:flex;flex-direction:column;gap:8px;padding:4px 2px;max-height:240px;}
+.aw-files .flchip{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:8px;background:#101a2c;border:1px solid var(--line);margin-bottom:6px;cursor:pointer;font-size:var(--fs-xs);color:var(--ink2);}
+.aw-files .flchip:hover{border-color:var(--accent);color:#fff;}
+.aw-files .flchip .ic{font-size:14px;}
+.aw-files .flchip .mt{color:var(--muted);margin-left:auto;}
+.aw-files .flchip .mt.m{color:var(--warn-ink);}
+.aw-files .flchip .mt.a{color:var(--ok-ink);}
+
+/* 可点开的案例文件芯片 */
+.filechip{display:inline-flex;align-items:center;gap:6px;margin:4px 4px 4px 0;padding:5px 11px;border-radius:8px;background:#12203a;border:1px solid #2b4c80;color:var(--accent-ink);font-size:var(--fs-xs);font-weight:700;cursor:pointer;font-family:inherit;}
+.filechip:hover{background:#1a3050;color:#fff;border-color:var(--accent);}
+.filechip::before{content:"📄";}
+
+/* 文件查看弹层 */
+.fmodal{position:fixed;inset:0;background:rgba(4,8,16,.72);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;}
+.fmodal.on{display:flex;}
+.fmodal .box{width:min(720px,100%);max-height:82vh;background:#0e1626;border:1px solid var(--line2);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.55);}
+.fmodal .hd{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:#101a2c;}
+.fmodal .hd .path{font-size:var(--fs-sm);color:#fff;font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fmodal .hd .src{font-size:var(--fs-xs);color:var(--muted);}
+.fmodal .hd .x{background:transparent;border:1px solid var(--line2);color:var(--ink2);border-radius:7px;padding:4px 10px;cursor:pointer;font:inherit;font-size:var(--fs-sm);}
+.fmodal .hd .x:hover{color:#fff;border-color:var(--accent);}
+.fmodal .bd{padding:16px 18px;overflow-y:auto;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#d3ddef;white-space:pre-wrap;word-break:break-word;}
+.fmodal .bd .hint{font-family:var(--font);font-size:var(--fs-xs);color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);}
+
+@media(max-width:820px){
+  .awin .body{grid-template-columns:1fr;}
+}
+
+/* checklist */
+.checklist{list-style:none;padding:0;margin:12px 0;}
+.checklist li{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:7px 0;cursor:pointer;font-size:var(--fs-sm);}
+.checklist li:hover{border-color:var(--line2);}
+.checklist li .box{width:20px;height:20px;border-radius:6px;border:2px solid var(--line2);flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;}
+.checklist li.done{opacity:.6;}
+.checklist li.done .box{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink);}
+.checklist li.done .tx{text-decoration:line-through;}
+
+/* 复制按钮（次要） */
+.copy{font-size:var(--fs-xs);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:2px 9px;cursor:pointer;margin-left:8px;}
+.copy:hover{color:var(--ink);border-color:var(--line2);}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#16233d;border:1px solid var(--accent);color:#fff;padding:10px 20px;border-radius:10px;font-size:var(--fs-sm);opacity:0;pointer-events:none;transition:.3s;z-index:99;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.agenda{display:grid;grid-template-columns:70px 1fr;gap:0;}
+.agenda .t{font-family:var(--mono);font-size:var(--fs-xs);color:var(--accent-ink);padding:8px 0;border-top:1px solid var(--line);}
+.agenda .c{padding:8px 0 8px 14px;border-top:1px solid var(--line);font-size:var(--fs-sm);}
+
+@media(max-width:820px){
+  .side{position:static;width:100%;height:auto;display:flex;flex-wrap:wrap;gap:4px;}
+  .brand{width:100%;}
+  .nav{display:flex;flex-wrap:wrap;gap:4px;}
+  .nav .grp{display:none;}
+  .wrap{flex-direction:column;}
+  .main{padding:20px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- 侧栏 -->
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div class="tt">Cursor 精讲课件<span>案例驱动 · 2 小时深入</span></div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="grp">开始</div>
+      <a data-tab="what" class="on"><span class="no">00</span><span>开场 · Cursor 是什么</span></a>
+      <a data-tab="interface"><span class="no">01</span><span>界面 · Agents Window</span></a>
+      <div class="grp">核心用法</div>
+      <a data-tab="talk"><span class="no">02</span><span>怎么跟 AI 打交道</span></a>
+      <a data-tab="context"><span class="no">03</span><span>怎么让它更准</span></a>
+      <a data-tab="canvas"><span class="no">04</span><span>Canvas 与提效</span></a>
+      <div class="grp">进阶 · 落地</div>
+      <a data-tab="skills"><span class="no">05</span><span>Skills &amp; Rules 固化重复活</span></a>
+      <a data-tab="safety"><span class="no">06</span><span>安全与把关</span></a>
+      <a data-tab="github"><span class="no">07</span><span>配合 GitHub</span></a>
+      <div class="grp">收尾</div>
+      <a data-tab="start"><span class="no">08</span><span>能做什么 · 上手带走</span></a>
+    </nav>
+  </aside>
+
+  <main class="main" id="main">
+
+  <!-- ============ 00 开场 ============ -->
+  <section id="what" class="on">
+    <span class="eyebrow">00 · 开场</span>
+    <h1>Cursor 是什么，为什么值得公司花时间学
+      <span class="en">What is Cursor · and why it matters for our team</span>
+    </h1>
+    <p class="lead">一句话：<b>Cursor = 能读懂整个项目、能直接动手改文件的 AI 工作台</b>。新版默认打开的是 <span class="mark">Agents Window</span>（代理窗口）——你派活，它干活，改完给你审核。它不只是"聊天问答"。</p>
+
+    <div class="card">
+      <h3>先破除一个误解</h3>
+      <p>很多同事以为"这是给程序员用的"。<b>不是。</b> 对我们绝大多数不写代码的人来说，Cursor 更像一个 <span class="mark">能读懂你所有文件、并且真的会动手帮你改</span> 的助理。</p>
+      <div class="grid g3" style="margin-top:12px">
+        <div class="card" style="margin:0"><b>普通 AI 聊天</b><p style="font-size:var(--fs-sm);color:var(--muted)">你复制文字进去 → 它回文字 → 你再复制回来贴。文件它看不见，也动不了。</p></div>
+        <div class="card" style="margin:0;border-color:var(--accent)"><b>Cursor · Agents Window</b><p style="font-size:var(--fs-sm);color:var(--accent-ink)">默认工作台。看你文件夹、改文件、跑命令、上传 GitHub。省去所有来回复制。</p></div>
+        <div class="card" style="margin:0"><b>结果差别</b><p style="font-size:var(--fs-sm);color:var(--muted)">一个是"给建议"，一个是"把事做完并给你审核"。</p></div>
+      </div>
+    </div>
+
+    <h2><span class="dot"></span>产出物地图：你交给它什么，它能交回什么</h2>
+    <p>先建立心智：Cursor <b>不是又一个聊天框</b>，而是在文件夹里把事做完的工作台。常见产出如下（本场会亲手练其中几项）：</p>
+    <table>
+      <tr><th>类型</th><th>你交给它</th><th>它交回什么（举例）</th></tr>
+      <tr><td><b>文档</b></td><td>提纲、纪要草稿、旧周报</td><td>周报、会议纪要、SOP、变更记录、邮件稿</td></tr>
+      <tr><td><b>表格</b></td><td>箱单/报价/多表数据</td><td>Packing List 三件套、报价汇总、对账、交叉核对结果</td></tr>
+      <tr><td><b>演示</b></td><td>大纲、要点列表</td><td>PPT 文案与备注；或直接做成 <span class="mark">HTML 演示页</span>（本课件就是）</td></tr>
+      <tr><td><b>图与看板</b></td><td>数据、流程说明</td><td>流程图/示意图、Canvas 销售看板（柱状图、KPI）；复杂设计仍用专业工具</td></tr>
+      <tr><td><b>网页 / 小工具</b></td><td>需求一句话</td><td>本地 HTML 表单、查询页、培训页；部署到网上、手机可访问——<span class="mark warn">后文再专讲</span></td></tr>
+      <tr><td><b>脚本自动化</b></td><td>重复体力活描述</td><td>Python：批量改名、转格式、OCR 后清洗再填表</td></tr>
+      <tr><td><b>工程辅助</b></td><td>图纸相关需求</td><td>说明、清单、驱动外部工具的脚本；<b>不是</b>内置 CAD，DWG 精修仍在专业软件里</td></tr>
+    </table>
+    <div class="callout info"><div class="h">一句话</div>能交回的是「落在文件夹里的成品」——文档、表、页、脚本——再由你审核；不是只回一段建议文字。</div>
+
+    <h2><span class="dot"></span>今天你会看到的三个真实案例</h2>
+    <p>本课件不讲空话，<b>每个功能都配演示；成果文件可以点开查看</b>（摘录自我们真实做过的活）：</p>
+    <div class="grid g3">
+      <div class="card" style="margin:0">
+        <span class="pill blue">主线案例</span>
+        <h3 style="margin-top:8px">CMEC 箱单三件套</h3>
+        <p style="font-size:var(--fs-sm)">Packing List / 明细 / 唛头。看 Skill 如何<span class="mark">一句话跑完且不出错</span>。</p>
+        <button type="button" class="filechip" data-case="skill">打开 SKILL.md 摘录</button>
+        <button type="button" class="filechip" data-case="changelog">打开 变更记录.md</button>
+      </div>
+      <div class="card" style="margin:0">
+        <span class="pill blue">辅助案例</span>
+        <h3 style="margin-top:8px">周报 &amp; 销售看板</h3>
+        <p style="font-size:var(--fs-sm)">用 Agent / Canvas 把周报做成<span class="mark">可交互看板</span>。</p>
+        <button type="button" class="filechip" data-case="report">打开 周报.md</button>
+        <button type="button" class="filechip" data-case="agentsmd">打开 AGENTS.md</button>
+      </div>
+      <div class="card" style="margin:0">
+        <span class="pill blue">元案例</span>
+        <h3 style="margin-top:8px">这份课件本身</h3>
+        <p style="font-size:var(--fs-sm)">你现在看的网页，就是用 Cursor 做出来的。</p>
+        <button type="button" class="filechip" data-case="guide">打开 入门指南摘录</button>
+      </div>
+    </div>
+
+    <h2><span class="dot"></span>今天怎么安排（可延长，讲明白为止）</h2>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">下面是建议节奏，现场可拉长。课件会发给大家，课后精读；但<b>亲手点一遍</b>比只看文档记得牢。</p>
+    <div class="card">
+      <div class="agenda">
+        <div class="t" style="border-top:0">00</div><div class="c" style="border-top:0">开场：Cursor 是什么 + 产出物地图（你现在在这）</div>
+        <div class="t">01</div><div class="c">Agents Window 界面 · 打开文件夹 · <b>环境与工具链</b> · IDE 补充（切法：Ctrl+Shift+N）</div>
+        <div class="t">02</div><div class="c">怎么跟 AI 打交道：Agent / Plan / Debug / Multitask / Ask</div>
+        <div class="t">03</div><div class="c">怎么让它更准：@ 引用、写清需求</div>
+        <div class="t">04</div><div class="c">Canvas：看板迭代，看得见结果</div>
+        <div class="t">05</div><div class="c">重点 · Skills &amp; Rules（CMEC 箱单实战）</div>
+        <div class="t">06</div><div class="c">安全与把关：Review、回退（拒收 / Ctrl+Z / Git）、隐私</div>
+        <div class="t">07</div><div class="c">配合 GitHub：建仓库、源代码管理、Commit/Push、Pages</div>
+        <div class="t">08</div><div class="c">上手清单 + 资源</div>
+      </div>
+    </div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      先扫一眼<b>产出物地图</b>，再声明：<b>主讲 Agents Window，IDE 只作补充，主线演示不来回切。</b> 再问同事："你每周有哪件事是重复、无聊、又容易错的？"——第 05 章 Skill 就是用来干掉这种活的。
+    </div>
+  </section>
+
+  <!-- ============ 01 Agents Window ============ -->
+  <section id="interface">
+    <span class="eyebrow">01 · 界面 · 主讲</span>
+    <h1>主界面：Agents Window（默认打开）
+      <span class="en">Agents Window — your default workspace</span>
+    </h1>
+    <p class="lead">新版 Cursor 打开后，多数情况默认进的是 <b>Agents Window</b>：左边是对话/任务列表，中间跟 AI 说话并选模式，右边（或下方）能看到它改了哪些文件——<span class="mark">点文件就能打开看内容</span>。下面这个模拟窗口可以点。</p>
+
+    <div class="venue">场地 · Agents Window（主讲）</div>
+    <div class="awin" id="awin">
+      <div class="titlebar">
+        <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <span class="tt">Agents Window · 操作手册项目</span>
+        <button type="button" class="switch" id="aw-switch" title="滚动到切 IDE 说明">↩ 补充：切到 IDE</button>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="lbl">① 任务 / Agent 列表</div>
+          <div class="agent-list" id="aw-agents">
+            <div class="ag on" data-ag="pack"><span class="nm">箱单 /X→/105</span><span class="st ok">✓ 已完成</span></div>
+            <div class="ag" data-ag="report"><span class="nm">改周报销售段</span><span class="st run">● 进行中</span></div>
+            <div class="ag" data-ag="teach"><span class="nm">做教学课件</span><span class="st">○ 草稿</span></div>
+          </div>
+        </div>
+        <div class="col aw-main">
+          <div class="lbl">② 对话 · 选模式再下命令</div>
+          <div class="modebar" id="aw-modes">
+            <button type="button" data-m="agent" class="on">Agent</button>
+            <button type="button" data-m="plan">Plan</button>
+            <button type="button" data-m="debug">Debug</button>
+            <button type="button" data-m="multitask">Multitask</button>
+            <button type="button" data-m="ask">Ask</button>
+          </div>
+          <div class="chatlog" id="aw-chat"></div>
+        </div>
+        <div class="col aw-files">
+          <div class="lbl">③ 改动的文件 · 点开看</div>
+          <div id="aw-filelist"></div>
+          <p style="font-size:var(--fs-xs);color:var(--muted);margin-top:8px">点芯片 = 打开案例文件（摘录真实内容）</p>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:var(--fs-xs);color:var(--muted)">👆 试试：点左侧不同任务 → 切 Ask/Plan/Agent/Debug → 点右侧文件芯片打开内容。<br>
+      Debug 示例在说什么：箱单要把「总箱数」改成 105，但表格里还有「位号」（零件编号，如 PPP-PCS-MAR-104）——里面的 104 <b>不是</b>箱数，改错了要会查、会回退。</p>
+
+    <div class="grid g3">
+      <div class="callout info" style="margin:0"><div class="h">① 左侧 · 任务列表</div>每个 Agent 对话像一张工单。可并行多个；点哪个就看哪个的进度。</div>
+      <div class="callout info" style="margin:0"><div class="h">② 中间 · 模式 + 对话</div>下拉与 IDE 侧栏一致：<b>Agent / Plan / Debug / Multitask / Ask</b>。<span class="kbd">Shift+Tab</span> 也可切；Agent 快捷键常见为 <span class="kbd">Ctrl+I</span>。</div>
+      <div class="callout info" style="margin:0"><div class="h">③ 右侧 · 成果文件</div>改了什么一目了然。点开看全文摘录——比只看一句「已完成」清楚得多。</div>
+    </div>
+
+    <div class="callout warn"><div class="h">⚠️ 打开项目的正确姿势</div>仍然要用 <b>打开文件夹</b>（不是单个文件）。Cursor 要先索引整个文件夹，才能跨文件帮你干活。</div>
+
+    <div class="card" id="toolchain">
+      <h3 style="margin-top:0">环境与工具链：开工前电脑要有什么</h3>
+      <p style="font-size:var(--fs-sm)">Cursor 经常要<b>读表、跑脚本、看图</b>。缺辅助程序时，Agent 会卡住——不是它不会，是本机没有工具。除 Office 外，下列优先选免费方案。</p>
+
+      <h3>① 几乎人人要</h3>
+      <ul style="font-size:var(--fs-sm)">
+        <li><b>Cursor</b> — 本工作台</li>
+        <li><b>WPS 或 Microsoft Office</b> — 看/改 xlsx、docx（箱单主线强依赖）</li>
+        <li><b>浏览器</b> — 预览 HTML、看板</li>
+        <li><b>Git</b>（Git for Windows）— 备份与协作（第 07 章）；装完用 <code>git --version</code> 验证</li>
+      </ul>
+
+      <h3>② 按场景选装（免费优先）</h3>
+      <table>
+        <tr><th>你要做的事</th><th>建议安装</th><th>备注</th></tr>
+        <tr><td>改 Word / Excel / 箱单</td><td>WPS 或 Office</td><td>Office 通常需授权；WPS 个人版可先用</td></tr>
+        <tr><td>扫描件 → 可编辑文字</td><td>OCR 工具</td><td>按公司合规选用本地/网盘 OCR</td></tr>
+        <tr><td>批量改名、转格式、清洗数据</td><td><b>Python</b></td><td>装完终端执行 <code>python --version</code></td></tr>
+        <tr><td>推送到 GitHub / 版本备份</td><td><b>Git</b></td><td>装完终端执行 <code>git --version</code>（见下方验证）</td></tr>
+        <tr><td>看 / 转 DWG</td><td>DWG 查看或转换工具</td><td>精修仍在 CAD 软件里</td></tr>
+        <tr><td>解压、截图做培训素材</td><td>7-Zip、系统截图/录屏</td><td>可选</td></tr>
+      </table>
+
+      <h3>③ 如何让 Cursor 帮你装（现场可照念）</h3>
+      <div class="callout info" style="margin:10px 0"><div class="h">名词先弄懂（给非程序员）</div>
+        <b>winget</b>＝Windows 自带的「用一句话装软件」工具（有点像应用商店的命令版）。<b>不会用没关系</b>——更稳妥的是让 AI 给你<b>官网下载链接</b>，你双击安装包、一路「下一步」。<br>
+        <b>验证</b>＝确认「真的装好了」。在 Cursor 打开终端（菜单 <b>终端 → 新建终端</b>，或 <span class="kbd">Ctrl+J</span>），分别粘贴下面命令回车：
+        <ul style="margin:6px 0 0;padding-left:1.2em">
+          <li>WPS/Office：能打开 Excel / 表格就算好</li>
+          <li>Python：<code>python --version</code> → 出现 <code>Python 3.x…</code> 即成功</li>
+          <li>Git：<code>git --version</code> → 出现 <code>git version 2.x…</code> 即成功（第 07 章推 GitHub 前必查）</li>
+        </ul>
+        若提示「不是内部或外部命令」→ 还没装好，或安装时没勾选「添加到 PATH」；装完后建议关掉再开 Cursor 再测。
+      </div>
+      <div class="callout warn" style="margin:10px 0"><div class="h">⚠️ 装软件 = 高风险操作</div>必须<b>每条命令你看过再执行</b>；公司电脑遵守 IT 规定。Agent 不会、也不该静默装系统软件。</div>
+      <ol style="font-size:var(--fs-sm)">
+        <li><b>Ask</b>：「我要做箱单 + 偶尔 OCR + 批量改文件，还要推 GitHub。Windows 上建议装什么？请用大白话列出清单和用途；优先给官网安装方式，winget 命令写可选。」</li>
+        <li><b>Agent</b>：「按清单帮我装。<span class="mark">先把完整步骤/命令给我看，我确认一步你再做一步。</span>我不太会终端，步骤请写到小白能照做。」</li>
+        <li><b>验证</b>：Office/WPS → 能打开表格；Python → <code>python --version</code>；Git → <code>git --version</code>。看到版本号 = 成功。</li>
+      </ol>
+      <p style="font-size:var(--fs-xs);color:var(--muted)">记一句：<b>缺什么工具 → 先 Ask 清单 → 再确认后安装 → 验证（能打开或看到版本号）→ 才派活。</b></p>
+    </div>
+
+    <div class="card" id="ide-supp">
+      <span class="venue ide">补充知识 · IDE（不单开一章）</span>
+      <h3 style="margin-top:6px">IDE 里的 Agent 面板：模式已经和 Window 对齐</h3>
+      <p style="font-size:var(--fs-sm)">打开 IDE 后，输入框旁的模式菜单同样是：<b>Agent · Plan · Debug · Multitask · Ask</b>（Agent 旁常见 <span class="kbd">Ctrl+I</span>）。<span class="mark">选模式的规则两边一样</span>，不必当成两套产品学。</p>
+      <p style="font-size:var(--fs-sm)">日常派活用 Window 仍够用。再切 IDE，主要是这些场景：</p>
+      <ul style="font-size:var(--fs-sm)">
+        <li>自己改几个字 / 用 <span class="kbd">Tab</span> 补全、选中后 <span class="kbd">Ctrl+K</span> 内联编辑</li>
+        <li>要并排盯很多文件、用 VS Code 扩展、源代码管理面板</li>
+      </ul>
+      <p style="font-size:var(--fs-sm)"><b>怎么切到 IDE（主路径）：</b></p>
+      <ul style="font-size:var(--fs-sm)">
+        <li>快捷键 <span class="kbd">Ctrl+Shift+N</span></li>
+        <li>或点窗口<b>右上角</b>常见的 <b>IDE</b> 按钮（带右斜向上箭头 ↗）</li>
+      </ul>
+      <p style="font-size:var(--fs-sm);color:var(--muted)">回到 Agents Window：再用一次同类入口 / 命令里的 <code>Open Agents Window</code>（以你界面实际按钮为准）。</p>
+      <p style="font-size:var(--fs-sm)"><b>快捷键别混：</b>在 <span class="mark">IDE 编辑区且已选中文字</span> 时，<span class="kbd">Ctrl+K</span> 才是内联编辑；在 Agents Window 里同一个键往往是<span class="mark warn">搜历史对话</span>。</p>
+    </div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      <b>主线演示全程留在 Window。</b> 工具链要<b>亲手装一条、验证一条</b>才记得住。切 IDE：<span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗。肌肉记忆：<b>派活在 Window，精修才回 IDE。</b>
+    </div>
+  </section>
+
+  <!-- ============ 02 怎么跟 AI 打交道 ============ -->
+  <section id="talk">
+    <span class="eyebrow">02 · 核心 · Agents Window</span>
+    <h1>怎么跟 AI 打交道：先选模式，再下命令
+      <span class="en">Talking to the AI in Agents Window</span>
+    </h1>
+    <p class="lead"><span class="venue">场地 · Agents Window</span><br>这一章在 <b>Agents Window</b> 演示；IDE 侧栏是<b>同一套模式菜单</b>。逻辑两层：① 先决定"让它到什么程度"（模式）→ ② 再描述任务、审核结果。Tab / Ctrl+K 见第 01 章补充。</p>
+
+    <h2><span class="dot"></span>模式 = 让 AI 走多远</h2>
+    <p style="font-size:var(--fs-sm);color:var(--muted);margin-bottom:8px">输入框旁下拉（Window / IDE 一致），常见顺序：<b>Agent → Plan → Debug → Multitask → Ask</b>。</p>
+    <table>
+      <tr><th>模式</th><th>会不会动文件</th><th>什么时候用（业务话）</th><th>心智比喻</th></tr>
+      <tr><td><b>Agent</b>（常用默认）</td><td class="down">会，直接改（改完你审核）</td><td>改周报、改箱单、批量处理——日常派活</td><td>直接派他去干活</td></tr>
+      <tr><td><b>Plan</b></td><td>先出方案，你确认后才动</td><td>步骤多、怕改错、要先对齐口径</td><td>先给你一份施工图</td></tr>
+      <tr><td><b>Debug</b></td><td>会（为查清原因可能改/加检查）</td><td>数字对不上、位号被误改、反复修不好——<b>先查原因再动手</b></td><td>带着证据找问题</td></tr>
+      <tr><td><b>Multitask</b></td><td>会（多路并行）</td><td>可拆开的大活（进阶，本场不深练）</td><td>几个助手同时干</td></tr>
+      <tr><td><b>Ask</b></td><td class="up">不会，只回答</td><td>问清楚、学项目、弄懂它为什么这么改</td><td>问同事，不让他动手</td></tr>
+    </table>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">主线练好 <b>Ask / Plan / Agent</b>；碰到「怎么查错了」再用 Debug。Multitask 知道有即可。</p>
+
+    <div class="demo" data-scenario="askPlanAgent"></div>
+
+    <div class="callout ok"><div class="h">✅ 口诀</div><b>不确定 → Ask；大事 → Plan；小事 → Agent；对不上/查不清 → Debug。</b> 面板点选，或 <span class="kbd">Shift+Tab</span> 循环切。</div>
+
+    <h2><span class="dot"></span>在 Window 里完整走一遍 Agent</h2>
+    <p>最常用：描述目标 → 它读文件并<b>直接改好</b> → 你在「改动的文件」里点开核对。注意：现版 Agents Window <span class="mark warn">常常不会先弹出「接受 / 拒绝」让你点一下才写入</span>——很多时候改完就已经进文件了，所以更要养成核对习惯。</p>
+
+    <div class="demo" data-scenario="agentFlow"></div>
+
+    <div class="callout warn"><div class="h">⚠️ 新人第一原则</div>Agent <b>会动真文件</b>。改完立刻点开看：绿/红对照懂不懂？不对就 <span class="kbd">Ctrl+Z</span> 或让它改回去；看不懂先切 Ask 问「你为什么这么改」。你永远有最终决定权。</div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      现场让同事：Ask → Plan → Agent 做小改动，并强调现网真相——<b>别等「Accept」按钮，改完就要自己点开文件看</b>。不对就撤销/重说。Tab/Ctrl+K 见第 01 章，今天主线不练。
+    </div>
+  </section>
+
+  <!-- ============ 03 让它更准 ============ -->
+  <section id="context">
+    <span class="eyebrow">03 · 核心</span>
+    <h1>怎么让 AI 更准：喂对上下文、说清需求
+      <span class="en">Make it accurate: context &amp; clear prompts</span>
+    </h1>
+    <p class="lead"><span class="venue">场地 · Agents Window</span><br>AI 不准，90% 是因为<b>没给对信息</b>或<b>需求太模糊</b>。这一章教两招：<span class="mark">@ 引用</span> 和 <span class="mark">把需求说清楚</span>。</p>
+
+    <h2><span class="dot"></span>第一招：@ 引用，手动指定"看哪里"</h2>
+    <p>在对话框输入 <code>@</code>，弹出列表，点选即可——相当于用手指出「看这个」。给不给 @，结果差很多：</p>
+    <div class="demo" data-scenario="atMention"></div>
+
+    <table>
+      <tr><th>@ 什么</th><th>例子</th><th>作用 / 会得到什么</th></tr>
+      <tr><td><code>@文件</code></td><td><code>@周报.md</code></td><td>让它重点看这个文件，回答/修改都基于它（最常用）</td></tr>
+      <tr><td><code>@文件夹</code></td><td><code>@助手生成文件/</code></td><td>限定在某个目录里找、改，不乱翻别处</td></tr>
+      <tr><td><code>@Web</code></td><td><code>@Web 2026 最新报关要求</code></td><td>若列表里有：联网搜资料；没有就用浏览器查完再把要点贴进对话</td></tr>
+      <tr><td>拖入图片 / PDF</td><td>截图、扫描件、说明书 PDF</td><td>照着图做、从扫描件抽文字要点（复杂扫描可配合 OCR 工具）</td></tr>
+    </table>
+    <div class="callout info"><div class="h">小提示</div>不确定文件名时：先 Ask「这个文件夹里跟周报相关的文件有哪些？」再对点名的文件打 <code>@</code>。也可以从资源管理器把文件<b>拖进对话框</b>，效果类似 @。<br>用 Agent 改完后：<b>点开被改的文件核对一眼</b>（现版常直接写入，见第 02 章）。</div>
+
+    <h2><span class="dot"></span>第二招：把需求说清楚（同样的活，说法不同结果天差地别）</h2>
+    <div class="demo" data-scenario="promptDemo"></div>
+    <div class="callout ok"><div class="h">✅ 好需求公式</div><b>做什么 + 在哪做 + 什么要求（约束）</b>。<br>
+      ❌ "帮我优化一下"<br>
+      ✅ "把 <code>@周报.md</code> 的销售段整理成 5 条要点，每条 ≤20 字，保留数字，用中文"<br>
+      ✅ 箱单类："把 <code>@Packing List….xlsx</code> 的 <code>/X</code> 定成 <code>/105</code>，<b>不要改位号</b>，并写变更记录"
+    </div>
+    <div class="callout warn"><div class="h">现场可练一句</div>打开你们真实项目文件夹，用 Ask 问：「<code>@某文件</code> 这段在说什么？用三句话概括。」再切 Agent 做一处你看得懂的小改动并核对。</div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      现场对比：先故意打一句模糊的看它反问，再补 @ 和约束看它一次做对。记住："<b>它不是不聪明，是你没告诉它去哪看、要什么、什么不能碰。</b>" 对话开太久会变笨 → 换任务就新开（详见第 06 章）。
+    </div>
+  </section>
+
+  <!-- ============ 04 Canvas ============ -->
+  <section id="canvas">
+    <span class="eyebrow">04 · 提效</span>
+    <h1>Canvas：把数据/内容变成能交互的看板
+      <span class="en">Canvas: turn content into a live, iterable artifact</span>
+    </h1>
+    <p class="lead"><span class="venue">场地 · Agents Window</span><br>Canvas 是「边聊边生成、能实时预览、还能反复迭代」的画布。下面演示会走完三版：<b>v1 柱状图初版 → v2 加环比列 → v3 更新 7 月数据</b>，请盯着图表怎么变。</p>
+
+    <div class="callout info"><div class="h">怎么用到 Canvas？</div>在 Agents Window 用大白话说即可，例如：「用这份销售数据做个可交互看板」。Agent 会生成 Canvas；之后继续说「加环比」「更新 7 月」就能迭代。不必先背菜单名。</div>
+
+    <div class="demo" data-scenario="canvasIterate"></div>
+
+    <div class="grid g2">
+      <div class="callout info" style="margin:0"><div class="h">演示里你会看到什么</div>4 张 KPI、带坐标轴的<b>柱状图</b>、可增列的明细表、区域横向条——对应真实「销售周报看板」场景，不是一张空壳图。</div>
+      <div class="callout info" style="margin:0"><div class="h">和普通聊天的差别</div>聊天给你一段文字；Canvas 给你一个<b>能预览、能一句话继续改</b>的成品（加列、加月份、换口径），改到满意为止。部署成手机可打开的网页——后文再专讲。</div>
+    </div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      播完演示后，指着三处变化讲：<b>① 绿色环比列</b>、<b>② 第四根柱</b>、<b>③ KPI 数字</b>。强调「迭代」——第一版永远不完美，价值在于大白话连续改。本课件网页也是同类产物。
+    </div>
+  </section>
+
+  <!-- ============ 05 Skills & Rules（重点） ============ -->
+  <section id="skills">
+    <span class="eyebrow">05 · 重点 · 落地</span>
+    <h1>Skills &amp; Rules：把公司的重复工作"固化"下来
+      <span class="en">Skills &amp; Rules: lock in your repeatable workflows</span>
+    </h1>
+    <p class="lead"><span class="venue">场地 · Agents Window</span><br>对公司价值最大的一章。每月都要做、步骤固定、又容易出错的活——就是 Skill 的对象。主线：<span class="mark">CMEC 箱单三件套</span>。成果文件都可点开。</p>
+
+    <h2><span class="dot"></span>先分清：Rules 和 Skills 有什么不同</h2>
+    <table>
+      <tr><th></th><th>Rules（家规）</th><th>Skills（专项流程）</th></tr>
+      <tr><td>是什么</td><td>项目/团队的<b>长期规矩</b></td><td>某类任务的<b>标准作业流程 SOP</b></td></tr>
+      <tr><td>什么时候生效</td><td>每次对话<b>自动</b>生效</td><td>需要时被<b>触发</b>（说到相关关键词就用）</td></tr>
+      <tr><td>放哪</td><td>项目根目录的 <code>AGENTS.md</code>（或 <code>.cursor/rules/</code>）</td><td>项目里 <code>.cursor/skills/名字/SKILL.md</code>；也可放在个人 Skills（全项目可用）</td></tr>
+      <tr><td>典型内容</td><td>"始终中文回复""不许乱动没点名的文件""命名规范"</td><td>"箱单三件套怎么做、硬约束、禁止事项、检查清单"</td></tr>
+      <tr><td>一句话</td><td><b>怎么说话、什么不能碰</b></td><td><b>某件事怎么一步步做对</b></td></tr>
+    </table>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">不会写文件也没关系：口述流程 → 让 Agent「整理成 Skill 草稿」→ 你核对硬约束和禁止项 → 再保存。跑完同样要<b>点开产物核对</b>。</p>
+
+    <h3>Rules 演示：加不加"家规"的差别</h3>
+    <div class="demo" data-scenario="rulesDemo"></div>
+
+    <h2><span class="dot"></span>主线案例：CMEC 箱单三件套 Skill</h2>
+    <div class="card">
+      <p><b>背景（这活为什么烦）：</b>每批货要同时做三张表——<span class="mark">Packing List（汇总箱单）</span>、<span class="mark">Detailed（明细）</span>、<span class="mark">Shipping Marks（唛头）</span>。规则很死：</p>
+      <ul>
+        <li>三张表的<b>箱号必须逐字一一对应</b>（唛头 Packages No. = 箱单 BOX No.）；</li>
+        <li>箱号格式 <code>前缀-序号/总件数</code>，定稿前总件数写 <code>/X</code>，定稿时统一改成真实总数；</li>
+        <li>改 <code>/X→/N</code> 时<b>绝不能误伤位号</b>（如 <code>PPP-PCS-MAR-104</code> 里的 104 不是件数！）；</li>
+        <li>每次改表<b>必须写变更记录</b>。</li>
+      </ul>
+      <p style="color:var(--muted);font-size:var(--fs-sm)">人工做：慢、枯燥、一不留神就把位号当件数改了，三表还容易对不上。</p>
+    </div>
+
+    <p>下面对比 <b>没 Skill 随口指挥</b> vs <b>有 Skill 一句话触发</b>，看结果差别（这是本章高潮，建议逐步点）：</p>
+    <div class="demo" data-scenario="skillDemo"></div>
+
+    <h2><span class="dot"></span>一个 Skill 长什么样（照着写就行）</h2>
+    <p>Skill 就是一个 <code>SKILL.md</code> 文件，顶部写"什么时候用它"，下面写"怎么做对 + 禁止什么"。真实的 CMEC Skill 节选：</p>
+    <div class="file-preview">
+      <div class="fh"><span>.cursor/skills/cmec-packing-trio/SKILL.md</span><span>Skill 定义</span></div>
+      <div class="fb" style="font-family:var(--mono);font-size:12px;line-height:1.7">
+<div class="li" style="color:#8393ad">---</div>
+<div class="li"><span style="color:#7fb0ff">name:</span> cmec-packing-trio</div>
+<div class="li"><span style="color:#7fb0ff">description:</span> Packing List / 明细 / 唛头 三件套标准流程。涉及 装箱单、唛头、BOX No、/X 时使用。</div>
+<div class="li" style="color:#8393ad">---</div>
+<div class="li">&nbsp;</div>
+<div class="li"><span style="color:#a7f3c8"># 三者关系（硬约束）</span></div>
+<div class="li">唛头 Packages No. = 箱单 BOX No.（<b style="color:#f5dca0">逐字相同</b>）</div>
+<div class="li">明细 一箱一张 SHEET，PACKAGE No. = BOX No.</div>
+<div class="li">&nbsp;</div>
+<div class="li"><span style="color:#a7f3c8"># 开工前必问</span></div>
+<div class="li">模板路径 / 前缀 / 批次；总件数是否已定；本轮只改哪块；明细来源</div>
+<div class="li">&nbsp;</div>
+<div class="li"><span style="color:#a7f3c8"># /X → /N 定稿（安全写法）</span></div>
+<div class="li">仅对含箱号前缀的字符串替换 <code>/旧总数</code> → <code>/新总数</code></div>
+<div class="li"><b style="color:#f5b0b8"># 禁止：把位号里的数字（PPP-…-104）当件数改</b></div>
+<div class="li">&nbsp;</div>
+<div class="li"><span style="color:#a7f3c8"># 每次改表必写 变更记录.md</span></div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <li><b>提炼流程</b>：把这件事「怎么做对 + 有哪些坑」口述给 Agent，让它先整理成草稿。</li>
+      <li><b>存成 Skill</b>：保存为 <code>SKILL.md</code>；开头用一两句话写清「什么时候该用这个流程」（对应文件里的 description）。</li>
+      <li><b>补硬约束和禁止项</b>：把「绝不能做的事」写进去（防错关键，如「不要改位号」）。</li>
+      <li><b>用一次、修一次</b>：说相关关键词触发跑一遍，哪里不对就补进 Skill，并点开产物核对。</li>
+    </div>
+
+    <div class="callout ok"><div class="h">✅ 为什么这对公司值钱</div>Skill 把"老师傅脑子里的经验"变成<b>可复用、可传承、不走样</b>的文件。新人一句话就能跑出老师傅级别的结果，还不会犯那几个致命错误。<b>一次编写，整个团队反复受益。</b></div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      这里一定用<b>你们自己真实的重复活</b>当例子（箱单、报价单、周报模板、命名规范都行）。先演示"随口让它改 → 出错"，再演示"有 Skill → 一句话做对 + 自动写变更记录"。同事看到自己天天头疼的活被一句话搞定，才会真正想学。
+    </div>
+  </section>
+
+  <!-- ============ 06 安全 ============ -->
+  <section id="safety">
+    <span class="eyebrow">06 · 把关</span>
+    <h1>安全与把关：AI 会犯错，你得会兜底
+      <span class="en">Safety: review, rollback, privacy</span>
+    </h1>
+    <p class="lead">AI 很强但不是永远对。用得放心的关键是三件事：<b>改完点开核对、随时能回退、知道数据去哪了</b>。</p>
+
+    <h2><span class="dot"></span>Review：改完点开核对</h2>
+    <div class="demo" data-scenario="reviewFlow"></div>
+
+    <h2><span class="dot"></span>回退：改坏了不怕（课上以这两条为准）</h2>
+    <div class="grid g2">
+      <div class="card" style="margin:0"><b><span class="kbd">Ctrl+Z</span> / 让它改回去</b><p style="font-size:var(--fs-sm);color:var(--muted)">刚改错可撤销；或说「把刚才改动撤回去」。现版未必有「先接受再写入」，撤销更常用。</p></div>
+      <div class="card" style="margin:0"><b>Git 版本（最稳）</b><p style="font-size:var(--fs-sm);color:var(--muted)">重要工作先提交一次（第 07 章），随时回到任意历史版本——培训现场也按这个练。</p></div>
+    </div>
+    <h2><span class="dot"></span>上下文别开太久 + 隐私</h2>
+    <div class="grid g2">
+      <div class="callout warn" style="margin:0"><div class="h">⚠️ 对话太长会变"笨"</div>
+        一个对话聊太久、掺太多话题，AI 会抓不住重点。<b>换任务就新开对话</b>。<br>
+        要接着旧话题：优先在历史列表里<b>打开那条旧对话继续聊</b>；或把关键几段复制进新对话。<br>
+        需要把整段对话存成文件时：打开该对话后，点对话区<b>右上角</b>（靠近「IDE↗」一侧）的 <b>···</b> 菜单 → <b>Export</b>。注意：右侧「改动的文件」栏里没有 Export；必须点对话面板自己的 ···。
+      </div>
+      <div class="callout info" style="margin:0"><div class="h">🔒 隐私怎么关数据共享（现版界面）</div>
+        打开 <b>Cursor Settings → General</b>，滚到最底部 <b>Privacy</b>。<br>
+        现版常见显示是 <b>「Data Sharing Enabled」</b>（数据共享已开），右边有 <b>Configure</b>——点它，在选项里改成不共享 / Privacy（名称以你下拉菜单为准）。<br>
+        <span class="mark warn">不要找名叫「Privacy Mode」的独立开关</span>——很多版本已经改成上面这种「状态 + Configure」。<br>
+        网页备用：<a href="https://cursor.com/dashboard?tab=settings" target="_blank">cursor.com/dashboard → Settings</a>。<br>
+        无论哪种状态：密码、密钥、未公开客户数据都不要贴进对话。团队版可能被管理员锁定。
+      </div>
+    </div>
+
+    <div class="callout danger"><div class="h">🚫 什么时候别让 Agent 自己来</div>删文件/删库、改权限、生产环境配置、你完全看不懂的大改动——<b>先 Ask 问清楚，或找同事确认</b>；已改错就立刻撤销，别放任不管。</div>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      三条安全带：① 改完点开核对 ② 能回退（Ctrl+Z / 让它改回 / Git）③ 隐私：General 底部 Privacy → <b>Configure</b>（你截图里若是 Data Sharing Enabled，就点这里改）。Export 只在对话右上角 ··· 里。一句话："<b>AI 负责快，你负责对。</b>"
+    </div>
+  </section>
+
+  <!-- ============ 07 GitHub ============ -->
+  <section id="github">
+    <span class="eyebrow">07 · 协作</span>
+    <h1>配合 GitHub：备份、协作、把成果发到网上
+      <span class="en">GitHub with Cursor: backup, collaborate, publish</span>
+    </h1>
+    <p class="lead">GitHub 是云端的项目备份与协作平台。对我们：<b>① 备份不怕丢 ② 多人协作 ③ 可把网页挂成链接</b>。本机先装好 Git（第 01 章）。官网：<a href="https://github.com" target="_blank">github.com</a>。</p>
+
+    <h2><span class="dot"></span>先搞清：网站 和 IDE 是两边</h2>
+    <table>
+      <tr><th></th><th>GitHub 网站</th><th>Cursor IDE（你现在这屏）</th></tr>
+      <tr><td>在哪</td><td>浏览器里的 github.com</td><td>本机打开的项目文件夹</td></tr>
+      <tr><td>仓库是什么</td><td>云端的一个项目文件夹（有网址）</td><td>本地文件夹要先「交给 Git 管」，再和云端连上</td></tr>
+      <tr><td>你刚做完的事</td><td>可能已经 <b>New repository</b> 建好了</td><td>源代码管理仍提示「当前文件夹没有 Git 存储库」——<b>正常</b></td></tr>
+    </table>
+    <div class="callout info"><div class="h">一句话</div>网站建仓库，只是在网上准备了一个空（或几乎空）的云端文件夹。<b>并不会自动管到你电脑上正在打开的这个文件夹。</b>所以 IDE 里还会出现两个蓝按钮，要你选怎么开始。</div>
+
+    <h2><span class="dot"></span>你会用到的词</h2>
+    <table>
+      <tr><th>术语</th><th>大白话</th></tr>
+      <tr><td><b>仓库 Repository</b></td><td>云端的项目文件夹（有名字、有网址）</td></tr>
+      <tr><td><b>Public / Private</b></td><td>公开 / 仅自己和受邀的人（公司材料用 Private）</td></tr>
+      <tr><td><b>Commit 提交</b></td><td>本地存一档，写一句「这次改了啥」</td></tr>
+      <tr><td><b>Push 推送</b></td><td>把本地已提交的内容上传到 GitHub</td></tr>
+      <tr><td><b>Pull 拉取</b></td><td>把云端更新下载到本地（多人协作时用）</td></tr>
+    </table>
+
+    <h2><span class="dot"></span>打开源代码管理之前：先确认装了 Git 软件</h2>
+    <p style="font-size:var(--fs-sm)">面板上写「没有 Git <b>存储库</b>」和「电脑没装 Git <b>软件</b>」是两回事：</p>
+    <table>
+      <tr><th>说法</th><th>实际意思</th></tr>
+      <tr><td>没有 Git 存储库</td><td>当前这个<b>文件夹</b>还没交给 Git 管（还没有本地仓库）。很常见。</td></tr>
+      <tr><td>没装 Git</td><td>电脑里没有 Git 这个<b>程序</b>。两个蓝按钮都干不成，要先安装。</td></tr>
+    </table>
+    <div class="steps">
+      <li>在 Cursor 打开终端（菜单 <b>终端 → 新建终端</b>，或 <span class="kbd">Ctrl+J</span> 再开终端）。</li>
+      <li>输入 <code>git --version</code> 回车。</li>
+      <li>若出现 <code>git version 2.x…</code> → <b>已装好</b>，往下做「两个蓝按钮」。</li>
+      <li>若提示「不是内部或外部命令」→ 先装 <b>Git for Windows</b>（第 01 章工具链 / 官网 git-scm.com），装完<b>关掉再开</b> Cursor，再测一次版本号。</li>
+    </div>
+
+    <h2><span class="dot"></span>打开源代码管理</h2>
+    <p style="font-size:var(--fs-sm)">在 <b>IDE</b> 里：<span class="kbd">Ctrl+Shift+G</span>，或左侧活动栏分支图标，或菜单 <b>查看 → 源代码管理</b>。若在 Agents Window，先 <span class="kbd">Ctrl+Shift+N</span> / 右上角 IDE↗。</p>
+
+    <h2><span class="dot"></span>两个蓝按钮：别和「装 Git」搞混</h2>
+    <p style="font-size:var(--fs-sm)">确认 Git 软件已装好之后，面板上「没有存储库」时会出现：</p>
+    <div class="grid g2">
+      <div class="card" style="margin:0"><b>初始化仓库</b><p style="font-size:var(--fs-sm)">只在本机让这个文件夹开始被 Git 管，<b>不等于装软件</b>，也<b>不会</b>自动上传。点完还要提交、再发布——步骤更多。</p></div>
+      <div class="card" style="margin:0;border-color:var(--accent)"><b>发布到 GitHub ← 有 Git 后新手点这个</b><p style="font-size:var(--fs-sm)">会自动完成本地初始化 + 登录 + 上传。你卡在 PAT 弹窗时，说明软件多半已经有了，缺的是登录凭证，不是「要先点初始化」。</p></div>
+    </div>
+    <div class="callout info"><div class="h">推荐顺序（本机已有 Git 时）</div>
+      不必先点「初始化仓库」。直接 <b>发布到 GitHub</b> → 若要 PAT 就按下一节做 → 选仓库名发布。<br>
+      只有想「先在本机练提交、暂时不上传」时，才单独点「初始化仓库」。
+    </div>
+    <div class="steps">
+      <li>确认打开的是项目<b>整夹</b>，且 <code>git --version</code> 已通过。</li>
+      <li>点 <b>发布到 GitHub</b>。</li>
+      <li>弹出 PAT 窗口 → 按下一节创建并粘贴（这是登录，不是建库）。</li>
+      <li>通过后选仓库名、Public/Private → 发布。</li>
+      <li>到 github.com 刷新，应能看到文件。</li>
+    </div>
+
+    <h2><span class="dot"></span>弹窗要 PAT：怎么弄（常见现况）</h2>
+    <p style="font-size:var(--fs-sm)">有的环境不会直接打开「网页登录授权」，而是要求 <b>PAT（个人访问令牌）</b>——一串一次性密码，用来证明「是我本人在操作 GitHub」。网站上先建的空仓库，和这一步无关；先过身份验证，才能发布。</p>
+    <div class="steps">
+      <li>在 Cursor 弹窗里点 <b>继续访问 GitHub</b>（若浏览器没开，手动打开：<a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>）。</li>
+      <li>登录 GitHub 后，选 <b>Tokens (classic)</b> → <b>Generate new token (classic)</b>。（也可用 Fine-grained；新手用 classic 步骤更少。）</li>
+      <li>Note 随便写：如 <code>Cursor</code>；Expiration 选 30 天或 90 天。</li>
+      <li>勾选权限：classic 勾 <b>repo</b>（整项即可）。</li>
+      <li>点 <b>Generate token</b>，立刻<b>复制</b>那串以 <code>ghp_</code> 开头的字符（离开页面就看不到了）。</li>
+      <li>回到 Cursor，把令牌粘贴进输入框 → 确认。</li>
+      <li>然后再走「发布到 GitHub」选仓库名 / 可见性。</li>
+    </div>
+    <div class="callout warn"><div class="h">注意</div>PAT 当作密码：不要发给别人、不要贴进聊天/课件。丢了就在 GitHub 同一页 Revoke 作废，再新建一条。</div>
+
+    <h2><span class="dot"></span>网站上先建的那个仓库呢？</h2>
+    <p style="font-size:var(--fs-sm)">网站 <b>New repository</b> 只是在云端占了个名字/空文件夹。<b>「发布到 GitHub」不会自动选用它</b>——要先完成上面的登录（PAT），发布时再选仓库名。可以：</p>
+    <ul style="font-size:var(--fs-sm)">
+      <li><b>最省事：</b>发布时起一个新名字（或同名以外的名字），网站上空仓库以后在 GitHub 仓库 Settings → Delete 删掉即可。</li>
+      <li><b>想用已建好的那个：</b>发布弹窗若出现「选择已有仓库」就选它；没有的话，用 Agent/终端把远程地址指到那个仓库（进阶，培训可不练）。</li>
+    </ul>
+
+    <h2><span class="dot"></span>连上之后：日常三件事</h2>
+    <p style="font-size:var(--fs-sm)">以后每次用 Agent 改完、自己核对没问题，就做一遍：</p>
+    <div class="demo" data-scenario="gitFlow"></div>
+    <table>
+      <tr><th>动作</th><th>在源代码管理里做什么</th><th>为啥</th></tr>
+      <tr><td><b>看更改</b></td><td>列表里有哪些文件变了；点开可对照</td><td>确认要上传的就是这些</td></tr>
+      <tr><td><b>Commit</b></td><td>勾选文件 → 写一句说明 → 提交</td><td>本地存一档，方便回退</td></tr>
+      <tr><td><b>Push</b></td><td>点同步 / 推送（有时写成 Sync）</td><td>云端也有这份，换电脑/同事能拿到</td></tr>
+      <tr><td><b>Pull</b>（多人时）</td><td>先拉取再改，或冲突时按提示处理</td><td>先拿到别人最新的，减少打架</td></tr>
+    </table>
+
+    <h2><span class="dot"></span>协作时你会用到的（知道即可）</h2>
+    <div class="grid g2">
+      <div class="card" style="margin:0"><b>邀请同事</b><p style="font-size:var(--fs-sm)">仓库页 → <b>Settings → Collaborators</b>（或组织里的成员管理）→ 用对方 GitHub 账号邀请。Private 仓库对方接受后才能看。</p></div>
+      <div class="card" style="margin:0"><b>别把秘密推上去</b><p style="font-size:var(--fs-sm)">密码、密钥、客户未公开数据不要放进仓库。Public 尤其危险；Private 也只给需要的人。</p></div>
+      <div class="card" style="margin:0"><b>Branch / PR</b><p style="font-size:var(--fs-sm)">大改动可开分支试，满意再用 Pull Request 合并。首场培训：会 Commit + Push 就够。</p></div>
+      <div class="card" style="margin:0"><b>让 Cursor 帮忙</b><p style="font-size:var(--fs-sm)">可在 Agent 说：「帮我提交并推送，说明写 xxx；先给我看将要执行的步骤」。高风险操作须你确认。</p></div>
+    </div>
+
+    <h2><span class="dot"></span>进阶：GitHub Pages 把网页挂成链接</h2>
+    <p style="font-size:var(--fs-sm)">把 HTML 课件推到仓库后，可生成一个网址发给同事（手机打开方式后文再专讲）：</p>
+    <div class="steps">
+      <li>确认 HTML 已 Push 到仓库。</li>
+      <li>仓库页 → <b>Settings → Pages</b>。</li>
+      <li>Source 选分支（常见 <code>main</code>），文件夹选 <code>/</code>（或 <code>/docs</code>）→ Save。</li>
+      <li>一两分钟后出现地址：<code>https://用户名.github.io/仓库名/</code>。</li>
+    </div>
+    <div class="callout ok"><div class="h">落地建议</div>公司若禁用公网 Pages，就用内网 Git + 本地打开 HTML；有内网 Pages/静态站再问 IT。</div>
+
+    <h2><span class="dot"></span>本章练习清单</h2>
+    <ul class="checklist" id="ghcheck">
+      <li data-k="gh0"><span class="box">✓</span><span class="tx">终端里 <code>git --version</code> 能看到版本号（有 Git 软件）</span></li>
+      <li data-k="gh1"><span class="box">✓</span><span class="tx">注册并登录 GitHub</span></li>
+      <li data-k="gh2"><span class="box">✓</span><span class="tx">发布时若要 PAT，已创建并粘贴成功</span></li>
+      <li data-k="gh3"><span class="box">✓</span><span class="tx">点过 <b>发布到 GitHub</b>，网页上能看到文件</span></li>
+      <li data-k="gh3b"><span class="box">✓</span><span class="tx">会用 <span class="kbd">Ctrl+Shift+G</span> 打开源代码管理</span></li>
+      <li data-k="gh4"><span class="box">✓</span><span class="tx">完成一次 Commit + Push，并在网页上看到文件</span></li>
+      <li data-k="gh5"><span class="box">✓</span><span class="tx">（可选）Settings → Pages 发布一个 HTML 链接</span></li>
+    </ul>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      先讲清「网站建好 ≠ 本地已连上」。投屏 IDE 里两个蓝按钮，让每人点 <b>发布到 GitHub</b> 走通一次。之后日常：<b>Commit → Push</b>。Pages 当彩蛋。
+    </div>
+  </section>
+
+  <!-- ============ 08 上手 ============ -->
+  <section id="start">
+    <span class="eyebrow">08 · 收尾</span>
+    <h1>能帮公司做什么 · 上手带走
+      <span class="en">Use cases &amp; your first-day checklist</span>
+    </h1>
+
+    <h2><span class="dot"></span>不写代码的人，能用它干这些</h2>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">与第 00 章「产出物地图」对应，方便对照练习：</p>
+    <div class="grid g2">
+      <div class="card" style="margin:0"><b>重复表单 / 文档</b><p style="font-size:var(--fs-sm)">箱单、报价、周报、纪要——做成 Skill，一句话跑完（第 05 章）。</p></div>
+      <div class="card" style="margin:0"><b>数据看板</b><p style="font-size:var(--fs-sm)">Excel/数据 → Canvas 交互看板，一句话加环比、改月份（第 04 章）。</p></div>
+      <div class="card" style="margin:0"><b>查资料 / 整理</b><p style="font-size:var(--fs-sm)"><code>@Web</code> 查规定、整理纪要、翻译润色；扫描件可配合 OCR（第 01 章工具链）。</p></div>
+      <div class="card" style="margin:0"><b>网页 / 小工具</b><p style="font-size:var(--fs-sm)">教学页、内部小工具——像这份课件；公网/手机访问后文再专讲。</p></div>
+    </div>
+
+    <h2><span class="dot"></span>新人第一天练习清单（点一下打勾）</h2>
+    <ul class="checklist" id="startcheck">
+      <li data-k="s1"><span class="box">✓</span><span class="tx">打开文件夹，确认自己在 <b>Agents Window</b>（默认）</span></li>
+      <li data-k="s1b"><span class="box">✓</span><span class="tx">对照工具链：本机有 WPS/Office；需要时再装 Python / Git 等</span></li>
+      <li data-k="s2"><span class="box">✓</span><span class="tx"><b>Ask</b> 问一句："这个项目/文件夹里都有什么？"</span></li>
+      <li data-k="s3"><span class="box">✓</span><span class="tx">用 <b>Agent</b> 做个小改动，<b>点开文件核对</b>；不对就撤销</span></li>
+      <li data-k="s4"><span class="box">✓</span><span class="tx">对话里试一次 <code>@某文件</code> 提问</span></li>
+      <li data-k="s5"><span class="box">✓</span><span class="tx">（可选）<span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗ 切到 IDE，再切回 Window</span></li>
+      <li data-k="s6"><span class="box">✓</span><span class="tx">把你一件<b>重复的活</b>写成 Skill 草稿</span></li>
+      <li data-k="s7"><span class="box">✓</span><span class="tx">完成一次 <b>Commit + Push</b> 到 GitHub</span></li>
+    </ul>
+
+    <h2><span class="dot"></span>推荐工作流（贴在工位上）</h2>
+    <div class="card"><pre style="margin:0;font-family:var(--mono);font-size:13px;color:#c7d3ea;line-height:1.9">默认工作台       →  Agents Window
+只想问 / 学项目  →  Ask
+大事 / 多步骤    →  Plan → 再 Agent 执行
+做功能 / 改多文件 →  Agent（改完点开文件核对）
+对不上 / 查不清 →  Debug（先查再改）
+重复的活         →  写成 Skill，一句话触发
+自己改几个字     →  （补充）Ctrl+Shift+N / 右上角 IDE↗ → Tab / Ctrl+K
+缺辅助软件       →  Ask 清单 → 确认后再装 → python/git --version
+改完必做         →  点开核对 → 不对就撤销 → Git 提交</pre></div>
+
+    <h2><span class="dot"></span>带走的资源</h2>
+    <div class="grid g2">
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">官方 · 权威</h3>
+        <ul style="font-size:var(--fs-sm)">
+          <li><a href="https://cursor.com" target="_blank">cursor.com</a> — 官网下载</li>
+          <li><a href="https://docs.cursor.com" target="_blank">docs.cursor.com</a> — 官方文档</li>
+          <li><a href="https://cursor.com/changelog" target="_blank">Changelog</a> — 新功能更新（Canvas 等都在这）</li>
+          <li><a href="https://forum.cursor.com" target="_blank">官方论坛</a> — 提问、看别人用法</li>
+        </ul>
+      </div>
+      <div class="card" style="margin:0">
+        <h3 style="margin-top:0">视频 · 教程</h3>
+        <ul style="font-size:var(--fs-sm)">
+          <li><a href="https://www.youtube.com/results?search_query=cursor+ai+tutorial+2026" target="_blank">YouTube：Cursor 教程</a></li>
+          <li><a href="https://search.bilibili.com/all?keyword=Cursor%20%E6%95%99%E7%A8%8B" target="_blank">B 站：Cursor 教程（中文）</a></li>
+        </ul>
+        <h3>本项目文档</h3>
+        <ul style="font-size:var(--fs-sm)">
+          <li><a href="Cursor入门操作指南.md" target="_blank">Cursor 入门操作指南.md</a></li>
+          <li><a href="Cursor学习路线与资源.md" target="_blank">Cursor 学习路线与资源.md</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout ok" style="margin-top:20px"><div class="h">🎉 结语</div>Cursor 会一直更新，按钮名字也可能变，但主线不变：<b>Agents Window 里 Ask 问清 → Plan 对齐 → Agent 执行 → 点开核对（不对就撤销）</b>，重复的活交给 <b>Skill</b>。切 IDE 用 <span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗。课件可课后精读，<b>亲手练一遍</b>最牢。</div>
+  </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 案例文件弹层 -->
+<div class="fmodal" id="fmodal" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="hd">
+      <div>
+        <div class="path" id="fmodal-path">文件</div>
+        <div class="src" id="fmodal-src"></div>
+      </div>
+      <button type="button" class="x" id="fmodal-x">关闭</button>
+    </div>
+    <div class="bd" id="fmodal-bd"></div>
+  </div>
+</div>
+
+<script>
+/* ========== 案例文件库（摘录自真实工作产物，可点开） ========== */
+const CASES={
+  skill:{
+    path:'.cursor/skills/cmec-packing-trio/SKILL.md',
+    src:'真实 Skill · CMEC 箱单三件套（节选）',
+    body:`---
+name: cmec-packing-trio
+description: Packing List / 明细 / 唛头 三件套标准流程。
+  涉及 装箱单、唛头、BOX No、/X 时使用。
+---
+
+# CMEC 三类装箱表标准流程
+
+## 三者关系（硬约束）
+Packing List 每一行（BOX No. + MATERIAL DESCRIPTION）
+  ├─ Shipping Marks：Packages No. = BOX No.（逐字相同）
+  └─ Detailed：一箱一张 SHEET，PACKAGE No. = BOX No.
+
+箱号常见格式：[前缀]-[序号]/[总件数]，定稿前多为 /X。
+
+## 开工前必问
+1. 三类模板路径、项目前缀、批次
+2. 总件数是否已定（未定则先 /X）
+3. 本轮只改哪一块（禁止顺手改未点名内容）
+4. 明细来源：BOM / 图纸 / 照片 / 口述
+
+## /X → /N 定稿（安全写法）
+仅对含箱号前缀的字符串替换 /旧总数 → /新总数
+禁止：把位号里的数字（如 PPP-PCS-MAR-104）当件数改
+
+## 每次改表必写 助手生成文件/变更记录.md`
+  },
+  changelog:{
+    path:'助手生成文件/变更记录.md',
+    src:'真实产物 · 箱单定稿后自动生成的变更记录（示例）',
+    body:`## 2026-08-07 15:20 — /X 定稿为 /105
+
+**文件：** Packing List / Detailed / Shipping Marks
+**改了什么：** 仅含 CMEC- 前缀的总件后缀 /X → /105
+**未改动：** 位号 PPP-*、序号、版式颜色、未点名的 SHEET
+**回退方法：** 见 Git 上一次提交
+
+## 2026-08-06 11:05 — 同步 Date / Compiler
+
+**文件：** Detailed Packing List-105sheets.xlsx
+**改了什么：** 将第一张 SHEET 的 Date、Compiler、Inspector 复制到其余 SHEET
+**未改动：** Supplier、明细行、尺重
+**回退方法：** Git`
+  },
+  report:{
+    path:'周报.md',
+    src:'辅助案例 · Agent 改完后的周报（示例）',
+    body:`# 本周周报
+
+本周销售额 1015 万元，环比增长 11.5%，
+华东区表现突出。
+风险：需关注华南区连续两月下滑。
+
+## 📊 查看销售看板
+[点击打开销售看板](销售看板.html)`
+  },
+  agentsmd:{
+    path:'AGENTS.md',
+    src:'项目家规 · Rules 示例（每次对话自动生效）',
+    body:`# 项目家规
+
+- 始终用中文回复
+- 不要改动 config/ 里未点名的内容
+- 动手前先说要做什么
+- 改表前确认：只改用户点名的部分
+- 正式表留项目主目录；过程物进 助手生成文件/`
+  },
+  guide:{
+    path:'Cursor入门操作指南.md',
+    src:'元案例 · 本手册入门文档摘录',
+    body:`# Cursor 入门操作指南
+
+> 面向新同事的快速上手 · 2026 版
+
+## Cursor 是什么？
+Cursor 是一款 AI 代码编辑器，基于 VS Code 改造。
+一句话：能读你的项目、改多个文件、跑命令、帮你查错。
+
+## 新人原则
+Agent 常会直接改文件（未必先点接受）。
+改完点开核对：绿=新增，红=删除。
+看不懂就先问或撤销。
+
+## 推荐工作流
+Ask 问清 → Plan 对齐 → Agent 执行 → 点开核对
+重复的活 → 写成 Skill`
+  },
+  checklist:{
+    path:'助手生成文件/检查报告.md',
+    src:'Skill 跑完后的交叉检查报告（示例）',
+    body:`# 三表交叉检查报告（只报告，未改文件）
+
+✔ 三表箱号一一对应、总件后缀均为 /105
+✔ 每个包装箱都有 Detailed 和 Shipping Marks
+✔ 唛头 Name = 汇总 DESCRIPTION
+✔ Detailed SHEET 序 = Packing List 序
+✔ 抽查英文拼写无误（Input 未误写 Iuput）
+
+结论：可交表。`
+  },
+  packingdiff:{
+    path:'Packing List（箱号字段摘录）',
+    src:'有 Skill 时：只改箱号后缀，位号不动',
+    body:`箱号（改前）  CMEC-1-104/X
+箱号（改后）  CMEC-1-104/105   ← 只改总件后缀
+
+位号（未动）  PPP-PCS-MAR-104  ← 绝不能当成件数
+
+说明：按 cmec-packing-trio Skill，
+仅对含项目箱号前缀的字符串做 /旧总数 → /新总数。`
+  }
+};
+
+function openCase(id){
+  const c=CASES[id]; if(!c){toast('案例未配置：'+id);return;}
+  const m=document.getElementById('fmodal');
+  document.getElementById('fmodal-path').textContent=c.path;
+  document.getElementById('fmodal-src').textContent=c.src;
+  document.getElementById('fmodal-bd').innerHTML='<div class="hint">📌 '+c.src+' · 点空白处或「关闭」退出</div>'+escapeHtml(c.body);
+  m.classList.add('on');
+}
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fileChip(id,label){return '<button type="button" class="filechip" data-case="'+id+'">'+(label||CASES[id]?.path||id)+'</button>';}
+
+document.getElementById('fmodal-x').onclick=()=>document.getElementById('fmodal').classList.remove('on');
+document.getElementById('fmodal').addEventListener('click',e=>{if(e.target.id==='fmodal')e.currentTarget.classList.remove('on');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('fmodal').classList.remove('on');});
+document.body.addEventListener('click',e=>{
+  const b=e.target.closest('[data-case]'); if(!b)return;
+  e.preventDefault();
+  openCase(b.dataset.case);
+});
+
+/* ========== 导航切换 ========== */
+const nav=document.getElementById('nav');
+const sections=[...document.querySelectorAll('section')];
+nav.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-tab]'); if(!a)return;
+  const id=a.dataset.tab;
+  nav.querySelectorAll('a').forEach(x=>x.classList.toggle('on',x===a));
+  sections.forEach(s=>s.classList.toggle('on',s.id===id));
+  document.querySelector('.main').scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ========== toast ========== */
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
+
+/* ========== Agents Window 交互模拟 ========== */
+(function(){
+  const agents={
+    pack:{
+      files:[{id:'changelog',name:'变更记录.md',mt:'A',mtl:'a'},{id:'packingdiff',name:'Packing List 箱号摘录',mt:'M',mtl:'m'},{id:'checklist',name:'检查报告.md',mt:'A',mtl:'a'}],
+      modes:{
+        agent:{u:'按三类装箱表流程，把 /X 定稿成 /105',a:'（Agent）已加载 Skill cmec-packing-trio。只改箱号后缀，位号 PPP-* 不动，并写变更记录。请点右侧文件查看。'},
+        plan:{u:'先给我 /X→/105 的方案，别急着改',a:'（Plan）方案：①确认三表箱数=105 ②仅替换含 CMEC- 前缀的 /X→/105 ③位号不动 ④写变更记录。确认后我再动手。'},
+        debug:{u:'有人把位号也改成 105 了，怎么查？',a:'（Debug · 人话）箱号总数该改成 /105，但「位号」PPP-PCS-MAR-104 里的 104 是零件编号，不能改。查法：①打开变更记录看「未改动」里有没有位号；②在三张表里搜 PPP-PCS-MAR-105——搜到了就是误伤。处理：回退这次改动，用 Skill 按规矩重跑。'},
+        multitask:{u:'箱单定稿和变更记录能不能并行？',a:'（Multitask · 进阶）可拆成：子任务 A 改三表箱号，子任务 B 起草变更记录提纲，再汇总交叉检查。非程序员先知道有这招即可。'},
+        ask:{u:'为什么不能直接全局替换 104？',a:'（Ask · 不动文件）因为位号 PPP-PCS-MAR-104 里的 104 是零件编号，不是「一共 104 箱」。全文替换 104→105 会把零件号也改坏。正确做法：只改带箱号前缀的总件数后缀。'}
+      }
+    },
+    report:{
+      files:[{id:'report',name:'周报.md',mt:'M',mtl:'m'},{id:'agentsmd',name:'AGENTS.md',mt:'—',mtl:''}],
+      modes:{
+        agent:{u:'把周报销售段改成带具体数字',a:'（Agent）已写入：1015 万 / 环比 +11.5%，并加了看板链接。点右侧 周报.md 查看。'},
+        plan:{u:'周报怎么改更专业？先出方案',a:'（Plan）①结论数字前置 ②补归因 ③加一句风险。确认后执行。'},
+        debug:{u:'看板数字和周报对不上',a:'（Debug）建议：对照 销售看板.html 的 KPI 与 周报.md 同一口径月份；若不一致，以看板原始数据为准改周报。'},
+        multitask:{u:'周报和看板一起改',a:'（Multitask · 进阶）可并行：一路改 周报.md，一路改看板 KPI；最后对口径。日常小事用 Agent 就够。'},
+        ask:{u:'周报里华东区数据从哪来的？',a:'（Ask）来自销售看板 6 月 vs 5 月：(1015-910)/910≈11.5%。我没有改任何文件。'}
+      }
+    },
+    teach:{
+      files:[{id:'guide',name:'入门指南摘录',mt:'A',mtl:'a'},{id:'skill',name:'SKILL.md 摘录',mt:'—',mtl:''}],
+      modes:{
+        agent:{u:'按精讲原则做一份 Cursor 教学页',a:'（Agent）已生成交互课件：Agents Window 主讲、案例可点开、Skill 用 CMEC 落地。你现在看的就是它。'},
+        plan:{u:'教学页大纲先给我',a:'（Plan）00开场→01 Window→02模式→…→05 Skills。IDE 只作补充。确认后写 HTML。'},
+        debug:{u:'同事说 Ctrl+K 变成搜索了',a:'（Debug）根因：在 Agents Window 里 Ctrl+K 是搜对话；内联编辑要在 IDE 编辑区且选中文字后按。'},
+        multitask:{u:'章节能不能分头写？',a:'（Multitask · 进阶）大课件可分章并行起草，再统一风格。培训现场不必演示。'},
+        ask:{u:'为什么主讲 Window 不主讲 IDE？',a:'（Ask）默认打开是 Window；非程序员主路径是派 Agent。且 IDE 侧栏模式菜单已与 Window 对齐（Agent/Plan/Debug/Multitask/Ask），差别主要在编辑器与扩展。'}
+      }
+    }
+  };
+  let cur='pack', mode='agent';
+  const list=document.getElementById('aw-agents');
+  const chat=document.getElementById('aw-chat');
+  const filesEl=document.getElementById('aw-filelist');
+  const modebar=document.getElementById('aw-modes');
+
+  function paint(){
+    const a=agents[cur];
+    const r=a.modes[mode]||a.modes.agent;
+    chat.innerHTML=`<div class="msg user"><div class="av">你</div><div class="bub">${r.u}</div></div>
+      <div class="msg ai"><div class="av">AI</div><div class="bub"><span class="tag">Agents Window · ${mode}</span>${r.a}</div></div>`;
+    chat.scrollTop=chat.scrollHeight;
+    filesEl.innerHTML=a.files.map(f=>`<div class="flchip" data-case="${f.id}"><span class="ic">📄</span><span>${f.name}</span><span class="mt ${f.mtl}">${f.mt}</span></div>`).join('');
+  }
+  list&&list.addEventListener('click',e=>{
+    const d=e.target.closest('[data-ag]'); if(!d)return;
+    list.querySelectorAll('.ag').forEach(x=>x.classList.toggle('on',x===d));
+    cur=d.dataset.ag; paint();
+  });
+  modebar&&modebar.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b)return;
+    modebar.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    mode=b.dataset.m; paint();
+  });
+  document.getElementById('aw-switch')?.addEventListener('click',()=>{
+    document.getElementById('ide-supp')?.scrollIntoView({behavior:'smooth',block:'center'});
+    toast('切 IDE：Ctrl+Shift+N 或右上角 IDE↗');
+  });
+  paint();
+})();
+
+/* ========== checklist（本地存储） ========== */
+document.querySelectorAll('.checklist').forEach(list=>{
+  const key='ck_'+list.id;
+  let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}');}catch(e){}
+  list.querySelectorAll('li').forEach(li=>{
+    if(saved[li.dataset.k])li.classList.add('done');
+    li.addEventListener('click',()=>{
+      li.classList.toggle('done');
+      saved[li.dataset.k]=li.classList.contains('done');
+      localStorage.setItem(key,JSON.stringify(saved));
+    });
+  });
+});
+
+/* ========== Canvas 渲染器（完整销售看板） ========== */
+function makeCanvas(variant){
+  const huanbi = variant==='huanbi' || variant==='july';
+  const july = variant==='july';
+  const months = july ? ['4月','5月','6月','7月'] : ['4月','5月','6月'];
+  const vals = july ? [820,910,1015,1180] : [820,910,1015];
+  const rates = vals.map((v,i)=> i===0 ? null : +(((v-vals[i-1])/vals[i-1])*100).toFixed(1));
+  const last = vals[vals.length-1];
+  const lastRate = rates[rates.length-1];
+  const avg = Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  const yoy = july ? 14.2 : 12.8;
+  const chartH = 118; // 柱体最大像素高度（留给柱顶数值）
+  const maxY = 1200;
+  const ticks = [1200,900,600,300,0];
+  const regions = july
+    ? [{n:'华东',v:480,p:41},{n:'华南',v:310,p:26},{n:'华北',v:240,p:20},{n:'西部',v:150,p:13}]
+    : [{n:'华东',v:420,p:41},{n:'华南',v:265,p:26},{n:'华北',v:210,p:21},{n:'西部',v:120,p:12}];
+
+  const verLabel = july ? 'v3 · 已更新 7 月' : huanbi ? 'v2 · 含环比' : 'v1 · 初版';
+  const cols = vals.map((v,i)=>{
+    const h = Math.max(10, Math.round(v/maxY*chartH));
+    const isNew = july && i===vals.length-1;
+    const isHi = huanbi && !july && i===vals.length-1;
+    return `<div class="col">
+      <div class="val">${v}</div>
+      <div class="bx${isNew?' new':''}${isHi?' hi':''}" style="height:${h}px"></div>
+    </div>`;
+  }).join('');
+  const xlabels = months.map(m=>`<span>${m}</span>`).join('');
+
+  const kpi = `<div class="kpis">
+    <div class="kpi"><div class="l">最新月销售额</div><div class="v">${last}<span style="font-size:12px;font-weight:600;color:var(--muted)"> 万</span></div><div class="d up">▲ 环比 +${lastRate}%</div></div>
+    <div class="kpi"><div class="l">月均销售额</div><div class="v">${avg}<span style="font-size:12px;font-weight:600;color:var(--muted)"> 万</span></div><div class="d">${months.length} 个月均值</div></div>
+    <div class="kpi"><div class="l">同比（估算）</div><div class="v">+${yoy}%</div><div class="d">较去年同期</div></div>
+    <div class="kpi${huanbi?' new':''}"><div class="l">${huanbi?'环比增长 · 新增':'待补指标'}</div><div class="v">${huanbi?'+'+lastRate+'%':'—'}</div><div class="d">${huanbi?'较上月':'说一句就能加'}</div></div>
+  </div>`;
+
+  const chart = `<div class="panel">
+    <div class="ph"><span>月度销售额（万元）</span><span class="tag${july?' flash':''}">柱状图${july?' · 新增 7 月':''}</span></div>
+    <div class="chart">
+      <div class="ya">${ticks.map(t=>`<span>${t}</span>`).join('')}</div>
+      <div class="plot-wrap">
+        <div class="plot">
+          <div class="glines">${ticks.map(()=>'<i></i>').join('')}</div>
+          <div class="cols">${cols}</div>
+        </div>
+        <div class="xlabels">${xlabels}</div>
+      </div>
+    </div>
+  </div>`;
+
+  const tblRows = months.map((m,i)=>{
+    const rateCell = huanbi
+      ? `<td class="newcol">${rates[i]==null?'—':(rates[i]>0?'+':'')+rates[i]+'%'}</td>`
+      : '';
+    return `<tr class="${i===months.length-1?'hi':''}"><td>${m}</td><td>${vals[i]}</td>${rateCell}</tr>`;
+  }).join('');
+
+  const table = `<div class="panel">
+    <div class="ph"><span>明细表</span>${huanbi?`<span class="tag flash">+ 环比列</span>`:`<span class="tag">点击迭代可加列</span>`}</div>
+    <table class="ctbl">
+      <thead><tr><th>月份</th><th>销售额(万)</th>${huanbi?'<th class="newcol">环比</th>':''}</tr></thead>
+      <tbody>${tblRows}</tbody>
+    </table>
+    <div style="margin-top:12px">
+      <div class="ph" style="margin-bottom:8px"><span>区域构成（最新月）</span></div>
+      ${regions.map(r=>`<div class="rbar"><span class="nm">${r.n}</span><div class="track"><div class="fill" style="width:${r.p}%"></div></div><span class="n">${r.v}万</span></div>`).join('')}
+    </div>
+  </div>`;
+
+  return `<div class="canvasim">
+    <div class="ch">
+      <span>📊 华东销售看板 · Canvas 实时预览</span>
+      <span class="ver on">${verLabel}</span>
+    </div>
+    <div class="cbody">
+      ${kpi}
+      <div class="canvas-grid">${chart}${table}</div>
+      <div class="canvas-foot">
+        <span>数据口径：含税出库额 · 单位万元</span>
+        <span>${july?'已含 4–7 月':huanbi?'已加环比，可继续说「更新 7 月」':'初版 · 下一句可「加环比」或「更新数据」'}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ========== 演示引擎 v2 ========== */
+const SCN={
+  askPlanAgent:{
+    title:'同一件事，不同模式不同结果',
+    sub:'场地：Agents Window · 需求「把周报销售段写好」——选模式看差异；成果可点开',
+    beats:[
+      {t:'note',html:'口诀：<b>Ask 只说不改 · Plan 先方案 · Agent 直接改 · Debug 先查清再改</b>。选一种试试 👇'},
+      {t:'choice',q:'你想用哪种模式？',opts:[
+        {label:'Ask（只问不改）',beats:[
+          {t:'user',text:'（Ask）周报销售段怎么写更好？'},
+          {t:'ai',html:'建议：①结论数字 ②归因 ③风险。例如「本周 1015 万，环比 +11.5%…」。<b>我没有改文件</b>。'},
+          {t:'result',tone:'warn',rh:'结果 · 文件未改',html:'可对照原稿：'+fileChip('report','打开 周报.md（改后示例，Ask 不会写成这样）')+'<div class="beat-note warn" style="margin-top:8px">Ask 只给建议。真要改，请切 Agent。</div>'},
+        ]},
+        {label:'Plan（先出方案）',beats:[
+          {t:'user',text:'（Plan）把周报销售段改好，先给我方案'},
+          {t:'ai',html:'方案：①「稳步增长」→ 1015 万 / +11.5% ②补华东区归因 ③加风险一句 ④格式不动。确认后再动手。'},
+          {t:'result',rh:'结果 · 仅计划',html:'<div class="beat-note">📋 文件还没动。你可以说「就按这个改」或「第③步不要」。</div>'},
+        ]},
+        {label:'Agent（直接改）',beats:[
+          {t:'user',text:'（Agent）把周报销售段改好，用具体数字'},
+          {t:'ai',html:'好的，直接改 周报.md 并写入。'},
+          {t:'diff',file:'周报.md',rows:[
+            {k:'del',x:'本周销售额较上周稳步增长，'},
+            {k:'add',x:'本周销售额 1015 万元，环比增长 11.5%，'},
+            {k:'ctx',x:'华东区表现突出。'},
+            {k:'add',x:'风险：需关注华南区连续两月下滑。'}
+          ]},
+          {t:'result',rh:'结果 · 已写入 · 点开查看',html:fileChip('report','打开 周报.md')+' '+fileChip('agentsmd','打开 AGENTS.md')},
+          {t:'note',tone:'ok',html:'✅ Agent：把活干完。改完请点开文件核对（别等 Accept 按钮）。'}
+        ]},
+        {label:'Debug（查问题）',beats:[
+          {t:'user',text:'（Debug）周报写了 +11.5%，有人和看板对不上，帮我查'},
+          {t:'ai',html:'按 Debug：核对看板 5→6 月 (1015-910)/910≈11.5%。若对方用的是同比或含税口径，数字会不同——先统一口径再改文案。'},
+          {t:'result',rh:'结果 · 根因说明',html:'<div class="beat-note ok">✅ Debug 先找证据，不急着乱改。确认口径后再用 Agent 改 周报.md。</div>'+fileChip('report','对照 周报.md')}
+        ]}
+      ]},
+      {t:'note',html:'口诀再念：<b>不确定→Ask；大事→Plan；小事→Agent；对不上→Debug</b>。'}
+    ]
+  },
+
+  agentFlow:{
+    title:'Agent 完整流程 · 从下命令到点开文件',
+    sub:'场地：Agents Window · 现版常见：直接改文件 → 你点开核对（未必先点接受）',
+    beats:[
+      {t:'note',html:'场景：让 Agent 给周报加「销售看板」链接。<b>下面按现网常见行为演示</b>（不是「先 Accept 再写入」）。'},
+      {t:'user',text:'（Agent）在周报末尾加「查看销售看板」区块，链接到 销售看板.html'},
+      {t:'ai',html:'好的。我先读 周报.md，在末尾追加区块，并写入文件。'},
+      {t:'diff',file:'周报.md',rows:[
+        {k:'ctx',x:'华东区表现突出。'},
+        {k:'add',x:''},
+        {k:'add',x:'## 📊 查看销售看板'},
+        {k:'add',x:'[点击打开销售看板](销售看板.html)'}
+      ]},
+      {t:'result',rh:'结果 · 往往已经写入',html:fileChip('report','打开 周报.md 核对')+'<div class="beat-note warn" style="margin-top:8px">⚠️ 现版 Agents Window 里，经常<b>不会</b>先弹「接受 / 拒绝」才落盘——改动可能已经进文件。右侧「改动的文件」点开核对才是正事。</div>'},
+      {t:'choice',q:'核对后你怎么做？',opts:[
+        {label:'没问题，继续干别的',beats:[
+          {t:'note',tone:'ok',html:'✅ 流程：下命令 → 它改文件 → <b>你点开看</b> → 确认无误。养成核对习惯比等按钮更重要。'}
+        ]},
+        {label:'不对 / 看不懂',beats:[
+          {t:'ai',html:'可以：① <b>Ctrl+Z</b> 撤销；② 说「把刚才的改动撤回去」；③ 切 Ask 问「你为什么这么改，用大白话说」。'},
+          {t:'result',tone:'warn',rh:'兜底',html:'<div class="beat-note warn">看不懂就先问或撤销，别假装看过。重要文件改前先 Git 提交更稳（第 07 章）。</div>'}
+        ]}
+      ]}
+    ]
+  },
+
+  atMention:{
+    title:'@ 引用 · 给不给差别有多大',
+    sub:'场地：Agents Window · 同一个问题，不指定 vs 指定',
+    beats:[
+      {t:'note',html:'需求：更新周报里的销售数字。'},
+      {t:'choice',q:'你怎么问？',opts:[
+        {label:'不用 @（泛泛地问）',beats:[
+          {t:'user',text:'帮我把周报里的销售数字更新一下'},
+          {t:'ai',html:'你指哪个文件？周报.md 还是销售看板？更新成多少？'},
+          {t:'result',tone:'warn',rh:'结果',html:'<div class="beat-note warn">⏳ 没产出，还要再问一轮。</div>'}
+        ]},
+        {label:'用 @ 精确指定',beats:[
+          {t:'user',text:'把 @周报.md 里的销售额改成 1015 万，环比 +11.5%'},
+          {t:'ai',html:'明白，直接改：'},
+          {t:'diff',file:'周报.md',rows:[
+            {k:'del',x:'本周销售额较上周稳步增长，'},
+            {k:'add',x:'本周销售额 1015 万元，环比增长 11.5%，'}
+          ]},
+          {t:'result',rh:'结果 · 点开确认',html:fileChip('report','打开 周报.md')+'<div class="beat-note ok" style="margin-top:8px">✅ @ 指对文件 + 给具体数字，一次到位。</div>'}
+        ]}
+      ]},
+      {t:'note',html:'结论：<b>@ 越准 + 需求越具体，AI 越少瞎问。</b>'}
+    ]
+  },
+
+  promptDemo:{
+    title:'把需求说清楚 · 模糊 vs 清楚',
+    sub:'场地：Agents Window · 整理会议纪要',
+    beats:[
+      {t:'choice',q:'你会怎么说？',opts:[
+        {label:'模糊："帮我优化一下"',beats:[
+          {t:'user',text:'帮我优化一下这个会议纪要'},
+          {t:'ai',html:'「优化」指精简、要点列表、待办，还是润色？方向不同结果差很多。'},
+          {t:'result',tone:'warn',rh:'结果',html:'<div class="beat-note warn">⏳ 又要再沟通一轮。</div>'}
+        ]},
+        {label:'清楚："整理成 5 条要点…"',beats:[
+          {t:'user',text:'把会议纪要整理成 5 条要点，每条≤20字，末尾「待办+负责人」，用中文'},
+          {t:'ai',html:'按你的格式整理好了（可保存为纪要文件）。'},
+          {t:'result',rh:'结果 · 一次到位',html:'<div class="file-preview"><div class="fh"><span>会议纪要-整理版.md</span><span class="up">可另存</span></div><div class="fb"><div class="li">1. 确认 Q3 报关新规已适用</div><div class="li">2. 华东区加大铺货</div><div class="li">3. 唛头模板本周统一</div><div class="li">4. 看板改为月度环比口径</div><div class="li">5. 下周五前完成三表交叉检查</div><div class="li" style="color:#a7f3c8">待办：三表检查 → 张工；模板统一 → 李工</div></div></div>'}
+        ]}
+      ]},
+      {t:'note',html:'公式：<b>做什么 + 在哪做 + 什么要求</b>。若用 Agent 写入文件，记得点开核对。'}
+    ]
+  },
+
+  canvasIterate:{
+    title:'Canvas 迭代 · 三句话改出完整看板',
+    sub:'场地：Agents Window · 看清：柱状图 / 明细表 / 区域条 怎么一步步变',
+    beats:[
+      {t:'user',text:'用 4–6 月销售数据做一个销售看板：要有 KPI、柱状图、明细表和区域构成'},
+      {t:'ai',html:'生成 <b>v1 初版</b>——KPI + 柱状图 + 明细 + 区域条（注意：还没有环比列）：'},
+      {t:'canvas',variant:'base',dur:2200},
+      {t:'note',html:'初版已经能汇报。继续用大白话迭代 👇'},
+      {t:'user',text:'明细表加一列「环比增长」，KPI 区也补上环比卡片'},
+      {t:'ai',html:'升级到 <b>v2</b>：明细表多出绿色「环比」列，右上 KPI 同步点亮：'},
+      {t:'canvas',variant:'huanbi',dur:2200},
+      {t:'result',rh:'变化点',html:'<div class="beat-note ok">✅ 看两处高亮：① KPI 第四格「环比 +11.5%」② 明细表新增环比列。柱高未变，结构变了。</div>'},
+      {t:'user',text:'7 月销售 1180 万，加进图表并重算环比和区域'},
+      {t:'ai',html:'升级到 <b>v3</b>：柱状图多一根青绿柱，数字与区域条全部重算：'},
+      {t:'canvas',variant:'july',dur:2200},
+      {t:'result',rh:'变化点',html:'<div class="beat-note ok">✅ 看三处：① 第四根柱（7 月 1180）② 最新月 KPI→1180 / 环比 +16.3% ③ 区域条数值上调。全程没打开 Excel。</div>'},
+      {t:'choice',q:'现场还可以继续说（任选体感）：',opts:[
+        {label:'“把柱子改成绿色系”',beats:[
+          {t:'user',text:'柱状图改成绿色系，最新月再醒目一点'},
+          {t:'ai',html:'配色微调后的看板（结构同 v3，强调最新月）：'},
+          {t:'canvas',variant:'july',dur:1800},
+          {t:'note',html:'配色、口径、加对比线……都可以一句一句改，<b>不必重做</b>。'}
+        ]},
+        {label:'“导出说明给领导看”',beats:[
+          {t:'ai',html:'可一并生成讲解口径：'},
+          {t:'result',rh:'口头汇报稿',html:'<div class="file-preview"><div class="fh"><span>看板-汇报口径.md</span><span class="up">可复制</span></div><div class="fb"><div class="li">4–7 月出库额持续上行，7 月 1180 万，环比 +16.3%。</div><div class="li">增长主力仍在华东（约 41%），华南次之。</div><div class="li">建议：下周例会直接投屏本 Canvas，现场改口径比改 PPT 快。</div></div></div>'}
+        ]}
+      ]},
+      {t:'note',html:'Canvas 精髓：<b>几秒钟出一版，说到满意为止</b>——本课件网页也是同类迭代产物。'}
+    ]
+  },
+
+  rulesDemo:{
+    title:'Rules · 加不加「家规」的差别',
+    sub:'场地：Agents Window · 有没有 AGENTS.md',
+    beats:[
+      {t:'choice',q:'项目里有没有配 AGENTS.md？',opts:[
+        {label:'没有家规',beats:[
+          {t:'user',text:'帮我改下这个配置的注释'},
+          {t:'ai',html:"Sure! I've updated config.yaml and also reformatted the whole file 👍"},
+          {t:'result',tone:'warn',rh:'结果',html:'<div class="beat-note warn">❌ ①英文回复 ②顺手整表格式化。每次都要重新叮嘱。</div>'}
+        ]},
+        {label:'有 AGENTS.md 家规',beats:[
+          {t:'note',html:'根目录这份家规每次自动生效：'},
+          {t:'result',rh:'点开家规',html:fileChip('agentsmd','打开 AGENTS.md')},
+          {t:'user',text:'帮我改下这个配置的注释'},
+          {t:'ai',html:'我只改注释这一行，不动其它。'},
+          {t:'diff',file:'config.yaml',rows:[
+            {k:'del',x:'# port'},
+            {k:'add',x:'# 服务监听端口，默认 8080'},
+            {k:'ctx',x:'port: 8080'}
+          ]},
+          {t:'result',rh:'结果',html:'<div class="beat-note ok">✅ 中文、只动点名内容。<b>家规写一次，一直生效。</b></div>'}
+        ]}
+      ]},
+      {t:'note',html:'Rules = 团队默认设置。家规改完也要点开核对，确认没误伤别的文件。'}
+    ]
+  },
+
+  skillDemo:{
+    title:'主线案例 · CMEC 箱单：没 Skill vs 有 Skill',
+    sub:'场地：Agents Window · /X→/105；成果文件可点开',
+    beats:[
+      {t:'note',html:'任务：三表定稿 <code>/X→/105</code>。<b>坑：位号 PPP-PCS-MAR-104 的 104 不是件数。</b> 可先点开 Skill 原文：'+fileChip('skill','打开 SKILL.md')},
+      {t:'choice',q:'先看哪种？',opts:[
+        {label:'❌ 没 Skill · 随口指挥',beats:[
+          {t:'user',text:'把表里所有的 /X 改成 /105，顺便把数字统一一下'},
+          {t:'ai',html:'好的，我把编号统一处理…（不知道规则，可能误改位号）'},
+          {t:'diff',file:'Packing List.xlsx',rows:[
+            {k:'del',x:'箱号 CMEC-1-104/X'},
+            {k:'add',x:'箱号 CMEC-1-104/105   ← 对'},
+            {k:'del',x:'位号 PPP-PCS-MAR-104'},
+            {k:'add',x:'位号 PPP-PCS-MAR-105   ← 错！'}
+          ]},
+          {t:'result',tone:'danger',rh:'结果 · 出错',html:'<div class="beat-note danger">❌ 位号被误改，且无变更记录。<b>这种错很难一眼看出。</b></div>'}
+        ]},
+        {label:'✅ 有 Skill · 一句话触发',beats:[
+          {t:'user',text:'按三类装箱表流程，把 /X 定稿成 /105'},
+          {t:'ai',html:'已加载 Skill「cmec-packing-trio」：①确认箱数 ②只改 CMEC- 总件后缀 ③位号不动 ④写变更记录'},
+          {t:'diff',file:'三类表箱号字段',rows:[
+            {k:'del',x:'箱号 CMEC-1-104/X'},
+            {k:'add',x:'箱号 CMEC-1-104/105'},
+            {k:'ctx',x:'位号 PPP-PCS-MAR-104   ← 保留 ✔'}
+          ]},
+          {t:'result',rh:'结果 · 做对了 · 点开产物',html:fileChip('packingdiff','打开箱号摘录')+' '+fileChip('changelog','打开 变更记录.md')+' '+fileChip('skill','打开 SKILL.md')},
+          {t:'note',tone:'ok',html:'✅ 只改该改的 + 自动留痕。点芯片看真实摘录。'},
+          {t:'choice',q:'定稿后还想做什么？',opts:[
+            {label:'三表交叉检查（先别改）',beats:[
+              {t:'ai',html:'按 checklist 只检查、不改：'},
+              {t:'result',rh:'检查报告',html:fileChip('checklist','打开 检查报告.md')}
+            ]},
+            {label:'更新文件名（104→105 sheets）',beats:[
+              {t:'result',rh:'结果',html:'<div class="beat-note ok">✅ <code>Detailed…-104sheets.xlsx</code> → <code>-105sheets.xlsx</code>，并同步项目规则里的正在使用文件名。</div>'}
+            ]}
+          ]}
+        ]}
+      ]},
+      {t:'note',html:'把你们最烦的重复活想成这个案例——<b>那就是你们的第一个 Skill</b>。'}
+    ]
+  },
+
+  reviewFlow:{
+    title:'Review · 看不懂的改动怎么办',
+    sub:'场地：Agents Window · 文件可能已改完——不懂就先问或撤销',
+    beats:[
+      {t:'note',html:'Agent 已经改了周报措辞（往往已写入）。你打开文件一看，不确定对不对：'},
+      {t:'diff',file:'周报.md',rows:[
+        {k:'del',x:'华东区表现突出。'},
+        {k:'add',x:'华东区环比 +11.5%，为主要增长极。'}
+      ]},
+      {t:'choice',q:'你会怎么处理？',opts:[
+        {label:'看不懂也装作没问题',beats:[
+          {t:'result',tone:'warn',rh:'结果',html:'<div class="beat-note warn">⚠️ 数字可能是编的。不核对 = 风险留给自己。</div>'}
+        ]},
+        {label:'切 Ask 问依据 / 不对就撤销',beats:[
+          {t:'user',text:'（Ask）+11.5% 从哪来的？用大白话说。若没依据，把这段改回去。'},
+          {t:'ai',html:'来自看板 6 月(1015) vs 5 月(910)。口径不同请告诉我；你也可以 Ctrl+Z 撤销刚才写入。'},
+          {t:'result',rh:'结果',html:fileChip('report','打开 周报.md')+'<div class="beat-note ok" style="margin-top:8px">✅ 依据清楚再留着；否则撤销或让它改回。</div>'}
+        ]}
+      ]},
+      {t:'note',html:'铁律：<span class="mark warn">看不懂就先问或撤销</span>——别指望一定有 Accept 按钮拦住。'}
+    ]
+  },
+
+  gitFlow:{
+    title:'GitHub 日常 · 改完 → 提交 → 推送',
+    sub:'可在 Window 核对改动后提交；也可用 IDE 源代码管理',
+    beats:[
+      {t:'note',html:'场景：Agent 改好了周报，想备份到 GitHub。'},
+      {t:'result',rh:'第 1 步 · 看改动',html:fileChip('report','打开将提交的 周报.md')},
+      {t:'diff',file:'周报.md',rows:[
+        {k:'ctx',x:'# 本周周报'},
+        {k:'add',x:'本周销售额 1015 万元，环比 +11.5%。'},
+        {k:'add',x:'## 📊 查看销售看板'}
+      ]},
+      {t:'result',rh:'第 2-3 步 · Commit → Push',html:'<div class="kbox"><div class="kt">✍️ 提交说明</div>补充销售数据并新增销售看板链接</div><div style="margin-top:8px"><span class="keycap done">✓ Commit</span> <span class="keycap done">✓ Push</span></div>'},
+      {t:'note',tone:'ok',html:'✅ Commit=存档，Push=上传，Pull=下载更新。'}
+    ]
+  }
+};
+
+function initDemo(el){
+  const sc=SCN[el.dataset.scenario];
+  if(!sc){el.innerHTML='<div style="padding:16px;color:#8393ad">（演示未配置）</div>';return;}
+  el.innerHTML=`
+    <div class="demo-hd"><div class="t">${sc.title}</div><div class="s">${sc.sub||''}</div></div>
+    <div class="demo-stage"></div>
+    <div class="demo-ctrl">
+      <button class="demo-play">▶ 播放</button>
+      <button class="demo-next">下一步 ▶</button>
+      <button class="demo-reset">↻ 重来</button>
+      <span class="demo-n"></span>
+    </div>`;
+  const stage=el.querySelector('.demo-stage');
+  const playBtn=el.querySelector('.demo-play');
+  const nextBtn=el.querySelector('.demo-next');
+  const resetBtn=el.querySelector('.demo-reset');
+  const nEl=el.querySelector('.demo-n');
+  let queue,idx,playing,playTimer,anim;
+
+  function scrollDown(){stage.scrollTop=stage.scrollHeight;}
+  function setPlay(p){playing=p;playBtn.textContent=p?'⏸ 暂停':'▶ 播放';playBtn.classList.toggle('playing',p);}
+  function setN(){nEl.textContent='第 '+Math.min(idx,queue.length)+' / '+queue.length+' 步';}
+
+  function typewriter(node,text,speed){
+    node.textContent='';let i=0;
+    const timer=setInterval(()=>{node.textContent=text.slice(0,++i);scrollDown();if(i>=text.length){clearInterval(timer);anim=null;}},speed||30);
+    anim={finish(){clearInterval(timer);node.textContent=text;anim=null;}};
+  }
+
+  function el_(tag,cls,html){const d=document.createElement(tag);if(cls)d.className=cls;if(html!=null)d.innerHTML=html;return d;}
+
+  function renderBeat(b){
+    if(b.t==='note'){
+      stage.appendChild(el_('div','beat-note'+(b.tone?' '+b.tone:''),b.html));
+    }
+    else if(b.t==='user'){
+      const w=el_('div','msg user');
+      w.innerHTML='<div class="av">你</div><div class="bub"><span class="tx"></span></div>';
+      stage.appendChild(w);
+      typewriter(w.querySelector('.tx'),b.text,28);
+    }
+    else if(b.t==='ai'){
+      const w=el_('div','msg ai');
+      w.innerHTML='<div class="av">AI</div><div class="bub"><span class="tag">Cursor · Window</span>'+b.html+'</div>';
+      stage.appendChild(w);
+    }
+    else if(b.t==='editor'){
+      const lines=b.lines.map(l=>`<div class="cl${l.sel?' sel':''}"><span class="n">${l.n}</span><span>${l.h}</span></div>`).join('');
+      stage.appendChild(el_('div','simcode','<div class="sh">'+(b.title||'编辑区')+'</div>'+lines));
+    }
+    else if(b.t==='tab'){
+      const box=el_('div','simcode','<div class="sh">'+(b.file||'编辑区')+' · Tab 补全</div>');
+      const line=el_('div','cl','<span class="n">'+(b.line||1)+'</span><span>'+b.base+'<span class="gh"></span><span class="keycap" style="display:none">Tab</span></span>');
+      box.appendChild(line);stage.appendChild(box);
+      const gh=line.querySelector('.gh');const cap=line.querySelector('.keycap');
+      let i=0;const timer=setInterval(()=>{gh.textContent=b.ghost.slice(0,++i);if(i>=b.ghost.length){clearInterval(timer);cap.style.display='inline-block';const t2=setTimeout(()=>{gh.classList.add('solid');cap.textContent='✓ 已接受';cap.classList.add('done');anim=null;},700);anim={finish(){clearTimeout(t2);gh.textContent=b.ghost;gh.classList.add('solid');cap.style.display='inline-block';cap.textContent='✓ 已接受';cap.classList.add('done');anim=null;}};}},30);
+      anim={finish(){clearInterval(timer);gh.textContent=b.ghost;gh.classList.add('solid');cap.style.display='inline-block';cap.textContent='✓ 已接受';cap.classList.add('done');anim=null;}};
+    }
+    else if(b.t==='kedit'){
+      const box=el_('div','kbox','<div class="kt">⌨️ Ctrl+K · 对选中内容下指令</div><span class="tx"></span>');
+      stage.appendChild(box);
+      typewriter(box.querySelector('.tx'),b.instruction,28);
+    }
+    else if(b.t==='diff'){
+      const rows=b.rows.map(r=>`<div class="dl ${r.k}">${r.x||''}</div>`).join('');
+      stage.appendChild(el_('div','diff','<div class="fh">📝 '+(b.file||'')+'　改动对照（绿=新增 红=删除）</div>'+rows));
+    }
+    else if(b.t==='result'){
+      const box=el_('div','beat-result'+(b.tone?' '+b.tone:''));
+      box.innerHTML='<div class="rh">'+(b.rh||'结果')+'</div>'+b.html;
+      stage.appendChild(box);
+    }
+    else if(b.t==='canvas'){
+      stage.appendChild(el_('div',null,makeCanvas(b.variant)));
+    }
+    else if(b.t==='html'){
+      stage.appendChild(el_('div',null,b.html));
+    }
+    else if(b.t==='choice'){
+      const box=el_('div','beat-choice');
+      box.innerHTML='<div class="q">🔀 '+b.q+'</div>';
+      const opts=el_('div','opts');
+      b.opts.forEach(o=>{
+        const btn=el_('button',null,o.label);
+        btn.onclick=()=>{
+          box.querySelectorAll('button').forEach(x=>x.disabled=true);
+          btn.style.background='linear-gradient(135deg,#4f8cff,#7b5cff)';btn.style.color='#fff';
+          const echo=el_('div','beat-note','👉 你选择了：<b>'+o.label+'</b>');
+          stage.appendChild(echo);
+          queue.splice(idx,0,...o.beats);
+          nextBtn.disabled=false;playBtn.disabled=false;
+          setN();scrollDown();
+          if(playing){clearTimeout(playTimer);playTimer=setTimeout(advance,700);}
+        };
+        opts.appendChild(btn);
+      });
+      box.appendChild(opts);
+      stage.appendChild(box);
+      nextBtn.disabled=true;playBtn.disabled=true;
+    }
+    scrollDown();
+  }
+
+  function endAll(){
+    setPlay(false);playBtn.disabled=true;nextBtn.disabled=true;nextBtn.textContent='已结束 ✓';
+    stage.appendChild(el_('div','beat-note ok','🎬 演示结束。点「↻ 重来」再看一遍。'));
+    scrollDown();
+  }
+
+  function advance(){
+    if(anim){anim.finish();}
+    if(idx>=queue.length){endAll();return;}
+    const b=queue[idx++];
+    renderBeat(b);
+    setN();
+    if(b.t==='choice'){setPlay(false);return;}
+    if(playing){clearTimeout(playTimer);playTimer=setTimeout(advance,b.dur|| (b.t==='diff'||b.t==='result'||b.t==='canvas'?1500:1100));}
+  }
+
+  function start(){
+    clearTimeout(playTimer);anim=null;
+    queue=sc.beats.slice();idx=0;stage.innerHTML='';
+    setPlay(false);playBtn.disabled=false;nextBtn.disabled=false;nextBtn.textContent='下一步 ▶';
+    advance();
+  }
+
+  playBtn.onclick=()=>{
+    if(playBtn.disabled)return;
+    if(playing){setPlay(false);clearTimeout(playTimer);}
+    else{setPlay(true);clearTimeout(playTimer);playTimer=setTimeout(advance,500);}
+  };
+  nextBtn.onclick=()=>{
+    if(nextBtn.disabled)return;
+    setPlay(false);clearTimeout(playTimer);
+    advance();
+  };
+  resetBtn.onclick=start;
+
+  start();
+}
+document.querySelectorAll('.demo').forEach(initDemo);
+</script>
+</body>
+</html>
