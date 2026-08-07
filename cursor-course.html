@@ -868,10 +868,11 @@ tr:nth-child(even) td{background:#0e1523;}
     <p style="font-size:var(--fs-sm)">词义：<b>仓库</b>=云端项目文件夹；<b>Public / Private</b>=公开 / 私有（公司材料用 Private）。</p>
 
     <h2><span class="dot"></span>⑤（可选）用 Pages 挂成网页链接</h2>
+    <p style="font-size:var(--fs-sm)">网页文件名尽量用<strong>英文</strong>（如 <code>cursor-course.html</code>）。中文名在手机里点链接常失败，只能复制粘贴。</p>
     <div class="steps">
       <li>HTML 已经 Push 上去。</li>
-      <li>仓库 <b>Settings → Pages</b> → 分支选 <code>main</code>、文件夹 <code>/</code> → Save。</li>
-      <li>得到 <code>https://用户名.github.io/仓库名/</code>。手机访问部署后文再讲。</li>
+      <li>仓库 <b>Settings → Pages</b> → Source 选 <b>Deploy from a branch</b> → Branch 选 <code>main</code>、文件夹 <code>/</code>（root）→ <b>Save</b>。</li>
+      <li>发链接时必须带上<strong>后面的文件名</strong>，例如 <code>https://用户名.github.io/仓库名/cursor-course.html</code>。只发到 <code>…/仓库名/</code> 没有首页文件时会 <b>404</b>。</li>
     </div>
 
     <h2><span class="dot"></span>练习清单</h2>
