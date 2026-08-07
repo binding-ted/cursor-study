@@ -812,11 +812,11 @@ tr:nth-child(even) td{background:#0e1523;}
   <!-- ============ 07 GitHub ============ -->
   <section id="github">
     <span class="eyebrow">07 · 协作</span>
-    <h1>配合 GitHub：第一次上传
-      <span class="en">GitHub · first publish</span>
+    <h1>配合 GitHub：备份到云端
+      <span class="en">GitHub · publish once, then Commit + Push</span>
     </h1>
-    <p class="lead">GitHub = 云端备份文件夹。本场只练通：<b>有 Git → 打开源代码管理 → 第一次发布（常要 PAT）→ 以后 Commit + Push</b>。官网 <a href="https://github.com" target="_blank">github.com</a>。</p>
-    <p style="font-size:var(--fs-sm);color:var(--muted)">路线图：①确认 Git → ②打开面板 → ③第一次发布 → ④（若弹出）PAT 登录 → ⑤日常备份 → ⑥可选 Pages。</p>
+    <p class="lead">GitHub = 云端备份文件夹（个人使用免费）。本场只练通一条线：<b>有 Git → 第一次发布 → 以后改完：先 Commit，再 Push</b>。官网 <a href="https://github.com" target="_blank">github.com</a>。</p>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">路线图：①确认 Git → ②打开源代码管理 → ③第一次发布 → ④日常用 Commit / Push → ⑤可选 Pages。</p>
 
     <h2><span class="dot"></span>① 确认本机装了 Git</h2>
     <p style="font-size:var(--fs-sm)">终端输入 <code>git --version</code>，看到 <code>git version 2.x…</code> 即可。没有就先装 Git for Windows（第 01 章），装完重启 Cursor。</p>
@@ -830,44 +830,44 @@ tr:nth-child(even) td{background:#0e1523;}
       <li>菜单 <b>查看 → 源代码管理</b></li>
     </ul>
 
-    <h2><span class="dot"></span>③ 第一次发布到 GitHub</h2>
-    <p style="font-size:var(--fs-sm)">看面板上出现哪一种，按对应操作（二选一）：</p>
+    <h2><span class="dot"></span>③ 第一次发布（只做一次）</h2>
+    <p style="font-size:var(--fs-sm)">看面板上出现哪一种，二选一即可：</p>
     <table>
       <tr><th>你看到的</th><th>怎么做</th></tr>
-      <tr><td>两个蓝按钮：初始化仓库 / 发布到 GitHub</td><td>新手直接点 <b>发布到 GitHub</b>（会顺带完成本地初始化；一般不必先点「初始化」）</td></tr>
-      <tr><td>已有改动列表 / 提交框，顶部有 <b>Publish Branch</b> 或「发布分支」</td><td>说明本地已经初始化过了 → 点 <b>Publish Branch</b>，选 GitHub，填仓库名</td></tr>
+      <tr><td>两个蓝按钮：初始化仓库 / 发布到 GitHub</td><td>直接点 <b>发布到 GitHub</b>（会顺带初始化；一般不必先点「初始化」）</td></tr>
+      <tr><td>已有改动列表 / 提交框，顶部有 <b>Publish Branch</b> 或「发布分支」</td><td>点 <b>Publish Branch</b> → 选 GitHub → 填仓库名</td></tr>
     </table>
     <div class="steps">
       <li>确认打开的是整个项目文件夹。</li>
-      <li>按上表点「发布到 GitHub」或「Publish Branch」。</li>
-      <li>若弹出「创建个人访问令牌 (PAT)」→ 这是登录，见④。</li>
-      <li>登录成功后：仓库名、Public/Private → 发布。</li>
+      <li>按上表点发布；若弹出登录窗口，用浏览器里已登录的 GitHub 账号完成授权即可。</li>
+      <li>选仓库名、Public（公开）或 Private（私有）→ 确认发布。</li>
       <li>浏览器打开 github.com，确认文件已出现。</li>
     </div>
-    <div class="callout info"><div class="h">网站上先建的空仓库</div>和 Cursor 里的「发布」没有自动绑在一起。发布时可起新名字；空仓库不用可以以后在网站上删掉。</div>
+    <div class="callout info"><div class="h">发布成功后，「发布到 GitHub」会消失</div>这是正常现象：第一次已经挂好远程仓库了。以后不要再找发布按钮；有改动时用下面的 <b>Commit</b> 和 <b>Push</b>。</div>
 
-    <h2><span class="dot"></span>④ 若弹出 PAT：按这个登录</h2>
-    <p style="font-size:var(--fs-sm)">有的电脑不能网页一键授权，需要 <b>PAT</b>（一串当密码用的令牌）。</p>
-    <div class="steps">
-      <li>弹窗点 <b>继续访问 GitHub</b>，或打开 <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>。</li>
-      <li>选 <b>Tokens (classic)</b> → <b>Generate new token (classic)</b>。</li>
-      <li>Note 写 <code>Cursor</code>；期限 30/90 天；勾选 <b>repo</b>。</li>
-      <li><b>Generate token</b> → 立刻复制 <code>ghp_…</code>（只显示一次）。</li>
-      <li>粘贴回 Cursor → 确认 → 继续发布。</li>
+    <h2><span class="dot"></span>④ 以后日常：Commit 和 Push（两个按钮）</h2>
+    <div class="callout warn"><div class="h">先记住：没改文件时，上面往往是空的</div>
+      <b>只有改了文件并保存后</b>，源代码管理里才会出现「更改」列表（列出改了哪个文件）。没改动时，不要干等 Commit 面板——那是正常的。<br>
+      保存文件（Ctrl+S）只是写进当前文件夹；<b>Commit</b> 才是在项目里的 <code>.git</code> 记一笔本地版本；<b>Push</b> 才上传到 GitHub。
     </div>
-    <p style="font-size:var(--fs-sm);color:var(--muted)">PAT 当密码保管：勿发给别人、勿贴进聊天。</p>
-
-    <h2><span class="dot"></span>⑤ 以后日常：改完 → Commit → Push</h2>
+    <p style="font-size:var(--fs-sm)">界面上是<strong>两个分开的按钮</strong>，不是写死「Commit → Push」一条。常见顺序：有更改 → 先 Commit → 再 Push。</p>
+    <div class="steps">
+      <li><b>改文件并保存</b> → 左侧出现「更改」和文件名（这时才有东西可提交）。</li>
+      <li>点 <b>Commit</b>：写一句说明（中文即可；Cursor 也常会自动生成）→ 提交到本地 <code>.git</code>。</li>
+      <li>点 <b>Push</b>（或同步）：把刚提交的内容上传到 GitHub。Push 一般不用再写说明。</li>
+    </div>
     <div class="demo" data-scenario="gitFlow"></div>
     <table>
-      <tr><th>动作</th><th>做什么</th></tr>
-      <tr><td><b>Commit</b></td><td>源代码管理里写一句说明 → 提交（本地存档）</td></tr>
-      <tr><td><b>Push</b></td><td>点同步 / 推送（上传到 GitHub）</td></tr>
-      <tr><td><b>Pull</b></td><td>多人协作时，先拉取别人的更新</td></tr>
+      <tr><th>你看到的</th><th>是什么</th></tr>
+      <tr><td>上面的「更改」+ 文件名</td><td>有未提交的改动时才出现；列出本次改了哪些文件</td></tr>
+      <tr><td><b>Commit</b></td><td>把当前改动存成一次本地版本（说明可中文）</td></tr>
+      <tr><td><b>Push</b> / 同步</td><td>把已 Commit 的内容上传到 GitHub</td></tr>
+      <tr><td>Agent Review / Find Issues</td><td>可选：让 AI 检查改动；跟备份无关，不点也能 Push</td></tr>
+      <tr><td>再往下那一串圆点</td><td><strong>历史记录</strong>（以前的 Commit），不是待办。最上=现在；下面=更早。有云图标≈已在 GitHub</td></tr>
     </table>
     <p style="font-size:var(--fs-sm)">词义：<b>仓库</b>=云端项目文件夹；<b>Public / Private</b>=公开 / 私有（公司材料用 Private）。</p>
 
-    <h2><span class="dot"></span>⑥（可选）用 Pages 挂成网页链接</h2>
+    <h2><span class="dot"></span>⑤（可选）用 Pages 挂成网页链接</h2>
     <div class="steps">
       <li>HTML 已经 Push 上去。</li>
       <li>仓库 <b>Settings → Pages</b> → 分支选 <code>main</code>、文件夹 <code>/</code> → Save。</li>
@@ -878,15 +878,15 @@ tr:nth-child(even) td{background:#0e1523;}
     <ul class="checklist" id="ghcheck">
       <li data-k="gh0"><span class="box">✓</span><span class="tx"><code>git --version</code> 有版本号</span></li>
       <li data-k="gh1"><span class="box">✓</span><span class="tx">会打开源代码管理（<span class="kbd">Ctrl+Shift+G</span>）</span></li>
-      <li data-k="gh2"><span class="box">✓</span><span class="tx">完成 PAT 登录（若弹出）</span></li>
-      <li data-k="gh3"><span class="box">✓</span><span class="tx">第一次发布成功，网页能看到文件</span></li>
-      <li data-k="gh4"><span class="box">✓</span><span class="tx">再改一点，完成一次 Commit + Push</span></li>
+      <li data-k="gh2"><span class="box">✓</span><span class="tx">第一次发布成功，网页能看到文件</span></li>
+      <li data-k="gh3"><span class="box">✓</span><span class="tx">知道：只有改了文件，「更改」列表才会出现</span></li>
+      <li data-k="gh4"><span class="box">✓</span><span class="tx">再改一点：先 Commit，再 Push</span></li>
       <li data-k="gh5"><span class="box">✓</span><span class="tx">（可选）Pages 出一个链接</span></li>
     </ul>
 
     <div class="speak">
       <div class="h">🎤 讲解要点</div>
-      只抓一条线：<b>version → 发布 / Publish Branch →（PAT）→ 网页看见文件 → 日常 Commit/Push</b>。分支、PR 本场不展开。
+      只抓一条线：<b>version → 第一次发布 → 网页看见文件 → 有更改才 Commit，再 Push</b>。没改文件时提交区可能是空的；底下圆点是历史。分支、PR 本场不展开。
     </div>
   </section>
 
@@ -1531,18 +1531,19 @@ const SCN={
   },
 
   gitFlow:{
-    title:'GitHub 日常 · 改完 → 提交 → 推送',
-    sub:'可在 Window 核对改动后提交；也可用 IDE 源代码管理',
+    title:'GitHub 日常 · 有更改才会出现提交区',
+    sub:'先改文件 → 左侧出现「更改」→ 再 Commit，再 Push',
     beats:[
-      {t:'note',html:'场景：Agent 改好了周报，想备份到 GitHub。'},
-      {t:'result',rh:'第 1 步 · 看改动',html:fileChip('report','打开将提交的 周报.md')},
+      {t:'note',html:'场景：刚改好了周报并保存。没改动时，源代码管理上面往往是空的——正常。'},
+      {t:'result',rh:'第 1 步 · 左侧出现「更改」',html:fileChip('report','更改里出现 周报.md')},
       {t:'diff',file:'周报.md',rows:[
         {k:'ctx',x:'# 本周周报'},
         {k:'add',x:'本周销售额 1015 万元，环比 +11.5%。'},
         {k:'add',x:'## 📊 查看销售看板'}
       ]},
-      {t:'result',rh:'第 2-3 步 · Commit → Push',html:'<div class="kbox"><div class="kt">✍️ 提交说明</div>补充销售数据并新增销售看板链接</div><div style="margin-top:8px"><span class="keycap done">✓ Commit</span> <span class="keycap done">✓ Push</span></div>'},
-      {t:'note',tone:'ok',html:'✅ Commit=存档，Push=上传，Pull=下载更新。'}
+      {t:'result',rh:'第 2 步 · Commit（本地）',html:'<div class="kbox"><div class="kt">✍️ 提交说明（中文即可）</div>补充销售数据并新增销售看板链接</div><div style="margin-top:8px"><span class="keycap done">✓ Commit</span></div>'},
+      {t:'result',rh:'第 3 步 · Push（上传 GitHub）',html:'<div style="margin-top:4px"><span class="keycap done">✓ Push / 同步</span></div><div style="margin-top:8px;font-size:var(--fs-sm);color:var(--muted)">Push 一般不用再写说明。</div>'},
+      {t:'note',tone:'ok',html:'✅ 有更改才显示文件列表；Commit=本地版本；Push=上传；底下圆点=历史。'}
     ]
   }
 };
