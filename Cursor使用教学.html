@@ -812,128 +812,75 @@ tr:nth-child(even) td{background:#0e1523;}
   <!-- ============ 07 GitHub ============ -->
   <section id="github">
     <span class="eyebrow">07 · 协作</span>
-    <h1>配合 GitHub：备份、协作、把成果发到网上
-      <span class="en">GitHub with Cursor: backup, collaborate, publish</span>
+    <h1>配合 GitHub：第一次上传 + 以后怎么备份
+      <span class="en">GitHub: first publish, then daily backup</span>
     </h1>
-    <p class="lead">GitHub 是云端的项目备份与协作平台。对我们：<b>① 备份不怕丢 ② 多人协作 ③ 可把网页挂成链接</b>。本机先装好 Git（第 01 章）。官网：<a href="https://github.com" target="_blank">github.com</a>。</p>
+    <p class="lead">GitHub = 云端项目备份。本场只练通一条线：<b>本机有 Git → 登录（常要 PAT）→ 发布上去 → 以后改完就 Commit + Push</b>。官网 <a href="https://github.com" target="_blank">github.com</a>。</p>
 
-    <h2><span class="dot"></span>先搞清：网站 和 IDE 是两边</h2>
-    <table>
-      <tr><th></th><th>GitHub 网站</th><th>Cursor IDE（你现在这屏）</th></tr>
-      <tr><td>在哪</td><td>浏览器里的 github.com</td><td>本机打开的项目文件夹</td></tr>
-      <tr><td>仓库是什么</td><td>云端的一个项目文件夹（有网址）</td><td>本地文件夹要先「交给 Git 管」，再和云端连上</td></tr>
-      <tr><td>你刚做完的事</td><td>可能已经 <b>New repository</b> 建好了</td><td>源代码管理仍提示「当前文件夹没有 Git 存储库」——<b>正常</b></td></tr>
-    </table>
-    <div class="callout info"><div class="h">一句话</div>网站建仓库，只是在网上准备了一个空（或几乎空）的云端文件夹。<b>并不会自动管到你电脑上正在打开的这个文件夹。</b>所以 IDE 里还会出现两个蓝按钮，要你选怎么开始。</div>
+    <h2><span class="dot"></span>① 先确认装了 Git 软件</h2>
+    <p style="font-size:var(--fs-sm)">终端里输入 <code>git --version</code>。看到 <code>git version 2.x…</code> 再继续；否则先装 Git for Windows（第 01 章），装完重启 Cursor。</p>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">面板写「没有 Git 存储库」= 这个<b>文件夹</b>还没被 Git 管，<b>不是</b>说没装软件。</p>
 
-    <h2><span class="dot"></span>你会用到的词</h2>
-    <table>
-      <tr><th>术语</th><th>大白话</th></tr>
-      <tr><td><b>仓库 Repository</b></td><td>云端的项目文件夹（有名字、有网址）</td></tr>
-      <tr><td><b>Public / Private</b></td><td>公开 / 仅自己和受邀的人（公司材料用 Private）</td></tr>
-      <tr><td><b>Commit 提交</b></td><td>本地存一档，写一句「这次改了啥」</td></tr>
-      <tr><td><b>Push 推送</b></td><td>把本地已提交的内容上传到 GitHub</td></tr>
-      <tr><td><b>Pull 拉取</b></td><td>把云端更新下载到本地（多人协作时用）</td></tr>
-    </table>
-
-    <h2><span class="dot"></span>打开源代码管理之前：先确认装了 Git 软件</h2>
-    <p style="font-size:var(--fs-sm)">面板上写「没有 Git <b>存储库</b>」和「电脑没装 Git <b>软件</b>」是两回事：</p>
-    <table>
-      <tr><th>说法</th><th>实际意思</th></tr>
-      <tr><td>没有 Git 存储库</td><td>当前这个<b>文件夹</b>还没交给 Git 管（还没有本地仓库）。很常见。</td></tr>
-      <tr><td>没装 Git</td><td>电脑里没有 Git 这个<b>程序</b>。两个蓝按钮都干不成，要先安装。</td></tr>
-    </table>
-    <div class="steps">
-      <li>在 Cursor 打开终端（菜单 <b>终端 → 新建终端</b>，或 <span class="kbd">Ctrl+J</span> 再开终端）。</li>
-      <li>输入 <code>git --version</code> 回车。</li>
-      <li>若出现 <code>git version 2.x…</code> → <b>已装好</b>，往下做「两个蓝按钮」。</li>
-      <li>若提示「不是内部或外部命令」→ 先装 <b>Git for Windows</b>（第 01 章工具链 / 官网 git-scm.com），装完<b>关掉再开</b> Cursor，再测一次版本号。</li>
-    </div>
-
-    <h2><span class="dot"></span>打开源代码管理</h2>
-    <p style="font-size:var(--fs-sm)">在 <b>IDE</b> 里：<span class="kbd">Ctrl+Shift+G</span>，或左侧活动栏分支图标，或菜单 <b>查看 → 源代码管理</b>。若在 Agents Window，先 <span class="kbd">Ctrl+Shift+N</span> / 右上角 IDE↗。</p>
-
-    <h2><span class="dot"></span>两个蓝按钮：别和「装 Git」搞混</h2>
-    <p style="font-size:var(--fs-sm)">确认 Git 软件已装好之后，面板上「没有存储库」时会出现：</p>
-    <div class="grid g2">
-      <div class="card" style="margin:0"><b>初始化仓库</b><p style="font-size:var(--fs-sm)">只在本机让这个文件夹开始被 Git 管，<b>不等于装软件</b>，也<b>不会</b>自动上传。点完还要提交、再发布——步骤更多。</p></div>
-      <div class="card" style="margin:0;border-color:var(--accent)"><b>发布到 GitHub ← 有 Git 后新手点这个</b><p style="font-size:var(--fs-sm)">会自动完成本地初始化 + 登录 + 上传。你卡在 PAT 弹窗时，说明软件多半已经有了，缺的是登录凭证，不是「要先点初始化」。</p></div>
-    </div>
-    <div class="callout info"><div class="h">推荐顺序（本机已有 Git 时）</div>
-      不必先点「初始化仓库」。直接 <b>发布到 GitHub</b> → 若要 PAT 就按下一节做 → 选仓库名发布。<br>
-      只有想「先在本机练提交、暂时不上传」时，才单独点「初始化仓库」。
-    </div>
-    <div class="steps">
-      <li>确认打开的是项目<b>整夹</b>，且 <code>git --version</code> 已通过。</li>
-      <li>点 <b>发布到 GitHub</b>。</li>
-      <li>弹出 PAT 窗口 → 按下一节创建并粘贴（这是登录，不是建库）。</li>
-      <li>通过后选仓库名、Public/Private → 发布。</li>
-      <li>到 github.com 刷新，应能看到文件。</li>
-    </div>
-
-    <h2><span class="dot"></span>弹窗要 PAT：怎么弄（常见现况）</h2>
-    <p style="font-size:var(--fs-sm)">有的环境不会直接打开「网页登录授权」，而是要求 <b>PAT（个人访问令牌）</b>——一串一次性密码，用来证明「是我本人在操作 GitHub」。网站上先建的空仓库，和这一步无关；先过身份验证，才能发布。</p>
-    <div class="steps">
-      <li>在 Cursor 弹窗里点 <b>继续访问 GitHub</b>（若浏览器没开，手动打开：<a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>）。</li>
-      <li>登录 GitHub 后，选 <b>Tokens (classic)</b> → <b>Generate new token (classic)</b>。（也可用 Fine-grained；新手用 classic 步骤更少。）</li>
-      <li>Note 随便写：如 <code>Cursor</code>；Expiration 选 30 天或 90 天。</li>
-      <li>勾选权限：classic 勾 <b>repo</b>（整项即可）。</li>
-      <li>点 <b>Generate token</b>，立刻<b>复制</b>那串以 <code>ghp_</code> 开头的字符（离开页面就看不到了）。</li>
-      <li>回到 Cursor，把令牌粘贴进输入框 → 确认。</li>
-      <li>然后再走「发布到 GitHub」选仓库名 / 可见性。</li>
-    </div>
-    <div class="callout warn"><div class="h">注意</div>PAT 当作密码：不要发给别人、不要贴进聊天/课件。丢了就在 GitHub 同一页 Revoke 作废，再新建一条。</div>
-
-    <h2><span class="dot"></span>网站上先建的那个仓库呢？</h2>
-    <p style="font-size:var(--fs-sm)">网站 <b>New repository</b> 只是在云端占了个名字/空文件夹。<b>「发布到 GitHub」不会自动选用它</b>——要先完成上面的登录（PAT），发布时再选仓库名。可以：</p>
+    <h2><span class="dot"></span>② 打开源代码管理（IDE）</h2>
+    <p style="font-size:var(--fs-sm)">Agents Window 先 <span class="kbd">Ctrl+Shift+N</span> / 右上角 IDE↗。然后任选：</p>
     <ul style="font-size:var(--fs-sm)">
-      <li><b>最省事：</b>发布时起一个新名字（或同名以外的名字），网站上空仓库以后在 GitHub 仓库 Settings → Delete 删掉即可。</li>
-      <li><b>想用已建好的那个：</b>发布弹窗若出现「选择已有仓库」就选它；没有的话，用 Agent/终端把远程地址指到那个仓库（进阶，培训可不练）。</li>
+      <li><span class="kbd">Ctrl+Shift+G</span></li>
+      <li>左侧活动栏「分支」图标</li>
+      <li>菜单 <b>查看 → 源代码管理</b></li>
     </ul>
 
-    <h2><span class="dot"></span>连上之后：日常三件事</h2>
-    <p style="font-size:var(--fs-sm)">以后每次用 Agent 改完、自己核对没问题，就做一遍：</p>
+    <h2><span class="dot"></span>③ 第一次上传：点「发布到 GitHub」</h2>
+    <p style="font-size:var(--fs-sm)">若显示两个蓝按钮：新手点 <b>发布到 GitHub</b>（会顺带完成本地初始化，一般不必先点「初始化仓库」）。</p>
+    <div class="steps">
+      <li>确认打开的是项目整夹。</li>
+      <li>点 <b>发布到 GitHub</b>。</li>
+      <li>若弹出「创建个人访问令牌 (PAT)」→ 这是<b>登录</b>，见下一步。</li>
+      <li>登录成功后，填仓库名、选 Public/Private → 发布。</li>
+      <li>浏览器打开 github.com，确认文件已出现。</li>
+    </div>
+    <div class="callout info"><div class="h">网站上先建的空仓库</div>和「发布」没有自动关系。发布时可起新名字；空仓库不用可以以后在网站上删掉。</div>
+
+    <h2><span class="dot"></span>④ 若弹出 PAT：照做登录</h2>
+    <p style="font-size:var(--fs-sm)">有的电脑不会网页一键授权，而要 <b>PAT</b>（一串登录用密码）。</p>
+    <div class="steps">
+      <li>弹窗点 <b>继续访问 GitHub</b>，或打开 <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>。</li>
+      <li><b>Tokens (classic)</b> → <b>Generate new token (classic)</b>。</li>
+      <li>Note 写 <code>Cursor</code>；期限选 30/90 天；勾选 <b>repo</b>。</li>
+      <li><b>Generate token</b> → 立刻复制 <code>ghp_…</code>（只显示一次）。</li>
+      <li>粘贴回 Cursor → 确认 → 继续发布。</li>
+    </div>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">PAT 当密码保管，勿发给别人、勿贴进聊天。</p>
+
+    <h2><span class="dot"></span>⑤ 以后日常：改完 → 提交 → 推送</h2>
     <div class="demo" data-scenario="gitFlow"></div>
     <table>
-      <tr><th>动作</th><th>在源代码管理里做什么</th><th>为啥</th></tr>
-      <tr><td><b>看更改</b></td><td>列表里有哪些文件变了；点开可对照</td><td>确认要上传的就是这些</td></tr>
-      <tr><td><b>Commit</b></td><td>勾选文件 → 写一句说明 → 提交</td><td>本地存一档，方便回退</td></tr>
-      <tr><td><b>Push</b></td><td>点同步 / 推送（有时写成 Sync）</td><td>云端也有这份，换电脑/同事能拿到</td></tr>
-      <tr><td><b>Pull</b>（多人时）</td><td>先拉取再改，或冲突时按提示处理</td><td>先拿到别人最新的，减少打架</td></tr>
+      <tr><th>动作</th><th>做什么</th></tr>
+      <tr><td><b>Commit</b></td><td>源代码管理里写一句说明 → 提交（本地存档）</td></tr>
+      <tr><td><b>Push</b></td><td>点同步/推送（上传到 GitHub）</td></tr>
+      <tr><td><b>Pull</b></td><td>多人协作时先拉取别人的更新</td></tr>
     </table>
+    <p style="font-size:var(--fs-sm)">词义：<b>仓库</b>=云端项目文件夹；<b>Public/Private</b>=公开/私有（公司材料用 Private）。</p>
 
-    <h2><span class="dot"></span>协作时你会用到的（知道即可）</h2>
-    <div class="grid g2">
-      <div class="card" style="margin:0"><b>邀请同事</b><p style="font-size:var(--fs-sm)">仓库页 → <b>Settings → Collaborators</b>（或组织里的成员管理）→ 用对方 GitHub 账号邀请。Private 仓库对方接受后才能看。</p></div>
-      <div class="card" style="margin:0"><b>别把秘密推上去</b><p style="font-size:var(--fs-sm)">密码、密钥、客户未公开数据不要放进仓库。Public 尤其危险；Private 也只给需要的人。</p></div>
-      <div class="card" style="margin:0"><b>Branch / PR</b><p style="font-size:var(--fs-sm)">大改动可开分支试，满意再用 Pull Request 合并。首场培训：会 Commit + Push 就够。</p></div>
-      <div class="card" style="margin:0"><b>让 Cursor 帮忙</b><p style="font-size:var(--fs-sm)">可在 Agent 说：「帮我提交并推送，说明写 xxx；先给我看将要执行的步骤」。高风险操作须你确认。</p></div>
-    </div>
-
-    <h2><span class="dot"></span>进阶：GitHub Pages 把网页挂成链接</h2>
-    <p style="font-size:var(--fs-sm)">把 HTML 课件推到仓库后，可生成一个网址发给同事（手机打开方式后文再专讲）：</p>
+    <h2><span class="dot"></span>⑥（可选）Pages 挂成网页链接</h2>
     <div class="steps">
-      <li>确认 HTML 已 Push 到仓库。</li>
-      <li>仓库页 → <b>Settings → Pages</b>。</li>
-      <li>Source 选分支（常见 <code>main</code>），文件夹选 <code>/</code>（或 <code>/docs</code>）→ Save。</li>
-      <li>一两分钟后出现地址：<code>https://用户名.github.io/仓库名/</code>。</li>
+      <li>HTML 已 Push 上去。</li>
+      <li>仓库 <b>Settings → Pages</b> → 分支选 <code>main</code>、文件夹 <code>/</code> → Save。</li>
+      <li>得到 <code>https://用户名.github.io/仓库名/</code>。手机可访问部署后文再讲。</li>
     </div>
-    <div class="callout ok"><div class="h">落地建议</div>公司若禁用公网 Pages，就用内网 Git + 本地打开 HTML；有内网 Pages/静态站再问 IT。</div>
 
-    <h2><span class="dot"></span>本章练习清单</h2>
+    <h2><span class="dot"></span>练习清单</h2>
     <ul class="checklist" id="ghcheck">
-      <li data-k="gh0"><span class="box">✓</span><span class="tx">终端里 <code>git --version</code> 能看到版本号（有 Git 软件）</span></li>
-      <li data-k="gh1"><span class="box">✓</span><span class="tx">注册并登录 GitHub</span></li>
-      <li data-k="gh2"><span class="box">✓</span><span class="tx">发布时若要 PAT，已创建并粘贴成功</span></li>
-      <li data-k="gh3"><span class="box">✓</span><span class="tx">点过 <b>发布到 GitHub</b>，网页上能看到文件</span></li>
-      <li data-k="gh3b"><span class="box">✓</span><span class="tx">会用 <span class="kbd">Ctrl+Shift+G</span> 打开源代码管理</span></li>
-      <li data-k="gh4"><span class="box">✓</span><span class="tx">完成一次 Commit + Push，并在网页上看到文件</span></li>
-      <li data-k="gh5"><span class="box">✓</span><span class="tx">（可选）Settings → Pages 发布一个 HTML 链接</span></li>
+      <li data-k="gh0"><span class="box">✓</span><span class="tx"><code>git --version</code> 有版本号</span></li>
+      <li data-k="gh1"><span class="box">✓</span><span class="tx">会打开源代码管理（<span class="kbd">Ctrl+Shift+G</span>）</span></li>
+      <li data-k="gh2"><span class="box">✓</span><span class="tx">完成 PAT 登录（若弹出）</span></li>
+      <li data-k="gh3"><span class="box">✓</span><span class="tx">第一次「发布到 GitHub」成功，网页能看到文件</span></li>
+      <li data-k="gh4"><span class="box">✓</span><span class="tx">再改一点内容，完成一次 Commit + Push</span></li>
+      <li data-k="gh5"><span class="box">✓</span><span class="tx">（可选）Pages 出一个链接</span></li>
     </ul>
 
     <div class="speak">
       <div class="h">🎤 讲解要点</div>
-      先讲清「网站建好 ≠ 本地已连上」。投屏 IDE 里两个蓝按钮，让每人点 <b>发布到 GitHub</b> 走通一次。之后日常：<b>Commit → Push</b>。Pages 当彩蛋。
+      现场只抓一条线：<b>version → 发布 →（PAT）→ 网页看见文件 → 日常 Commit/Push</b>。别同时讲太多分支/PR。
     </div>
   </section>
 
