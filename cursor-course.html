@@ -461,7 +461,7 @@ tr:nth-child(even) td{background:#0e1523;}
         <div class="t" style="border-top:0">00</div><div class="c" style="border-top:0">开场：Cursor 是什么 + 产出物地图（你现在在这）</div>
         <div class="t">01</div><div class="c">Agents Window 界面 · 打开文件夹 · <b>环境与工具链</b> · IDE 补充（切法：Ctrl+Shift+N）</div>
         <div class="t">02</div><div class="c">怎么跟 AI 打交道：Agent / Plan / Debug / Multitask / Ask</div>
-        <div class="t">03</div><div class="c">怎么让它更准：@ 引用、写清需求</div>
+        <div class="t">03</div><div class="c">怎么让它更准：@ 引用、选中送对话、写清需求</div>
         <div class="t">04</div><div class="c">Canvas：看板迭代，看得见结果</div>
         <div class="t">05</div><div class="c">重点 · Skills &amp; Rules（CMEC 箱单实战）</div>
         <div class="t">06</div><div class="c">安全与把关：Review、回退（拒收 / Ctrl+Z / Git）、隐私</div>
@@ -639,7 +639,7 @@ tr:nth-child(even) td{background:#0e1523;}
     <h1>怎么让 AI 更准：喂对上下文、说清需求
       <span class="en">Make it accurate: context &amp; clear prompts</span>
     </h1>
-    <p class="lead"><span class="venue">场地 · Agents Window</span><br>AI 不准，90% 是因为<b>没给对信息</b>或<b>需求太模糊</b>。这一章教两招：<span class="mark">@ 引用</span> 和 <span class="mark">把需求说清楚</span>。</p>
+    <p class="lead"><span class="venue">场地 · Agents Window</span><br>AI 不准，90% 是因为<b>没给对信息</b>或<b>需求太模糊</b>。这一章三招：<span class="mark">@ 引用</span>、<span class="mark">选中文字送进对话</span>、<span class="mark">把需求说清楚</span>。</p>
 
     <h2><span class="dot"></span>第一招：@ 引用，手动指定"看哪里"</h2>
     <p>在对话框输入 <code>@</code>，弹出列表，点选即可——相当于用手指出「看这个」。给不给 @，结果差很多：</p>
@@ -654,18 +654,27 @@ tr:nth-child(even) td{background:#0e1523;}
     </table>
     <div class="callout info"><div class="h">小提示</div>不确定文件名时：先 Ask「这个文件夹里跟周报相关的文件有哪些？」再对点名的文件打 <code>@</code>。也可以从资源管理器把文件<b>拖进对话框</b>，效果类似 @。<br>用 Agent 改完后：<b>点开被改的文件核对一眼</b>（现版常直接写入，见第 02 章）。</div>
 
-    <h2><span class="dot"></span>第二招：把需求说清楚（同样的活，说法不同结果天差地别）</h2>
+    <h2><span class="dot"></span>第二招：选中一段话 → Add to Chat / Side Chat</h2>
+    <p style="font-size:var(--fs-sm)">在 Agents Window 打开的文件或预览里，用鼠标<strong>选中一段文字</strong>，上方会出现工具条（不用先复制）：</p>
+    <table>
+      <tr><th>按钮</th><th>快捷键</th><th>做什么</th></tr>
+      <tr><td><b>Add to Chat</b></td><td><span class="kbd">Ctrl+L</span></td><td>把这段送进<strong>当前主对话</strong>，接着问或改（最常用）</td></tr>
+      <tr><td><b>Add to Side Chat</b></td><td><span class="kbd">Ctrl+Shift+S</span></td><td>送进<strong>侧边另一条对话</strong>；主线任务不换话题，适合另开一小问</td></tr>
+    </table>
+    <div class="callout ok"><div class="h">和 @ 怎么配合</div><code>@文件</code> = 指出「看哪个文件」；选中送对话 = 指出「就看/就改这一小段」。比整段复制粘贴更干净，也比只 @ 整个文件更精确。<br>例：选中「以公司规定为准。」→ <b>Add to Chat</b> → 再打「改成更短的一句，语气正式」。</div>
+
+    <h2><span class="dot"></span>第三招：把需求说清楚（同样的活，说法不同结果天差地别）</h2>
     <div class="demo" data-scenario="promptDemo"></div>
     <div class="callout ok"><div class="h">✅ 好需求公式</div><b>做什么 + 在哪做 + 什么要求（约束）</b>。<br>
       ❌ "帮我优化一下"<br>
       ✅ "把 <code>@周报.md</code> 的销售段整理成 5 条要点，每条 ≤20 字，保留数字，用中文"<br>
       ✅ 箱单类："把 <code>@Packing List….xlsx</code> 的 <code>/X</code> 定成 <code>/105</code>，<b>不要改位号</b>，并写变更记录"
     </div>
-    <div class="callout warn"><div class="h">现场可练一句</div>打开你们真实项目文件夹，用 Ask 问：「<code>@某文件</code> 这段在说什么？用三句话概括。」再切 Agent 做一处你看得懂的小改动并核对。</div>
+    <div class="callout warn"><div class="h">现场可练一句</div>打开真实项目文件 → 选中一段 → <b>Add to Chat</b>，问「用三句话概括」。再试一次 <b>Add to Side Chat</b> 另问一句。也可配合 <code>@某文件</code>，再切 Agent 做一处小改动并核对。</div>
 
     <div class="speak">
       <div class="h">🎤 讲解要点</div>
-      现场对比：先故意打一句模糊的看它反问，再补 @ 和约束看它一次做对。记住："<b>它不是不聪明，是你没告诉它去哪看、要什么、什么不能碰。</b>" 对话开太久会变笨 → 换任务就新开（详见第 06 章）。
+      现场对比：先故意打一句模糊的看它反问，再补 @ / 选中段落 / 约束看它一次做对。记住："<b>它不是不聪明，是你没告诉它去哪看、要什么、什么不能碰。</b>" 对话开太久会变笨 → 换任务就新开（详见第 06 章）。
     </div>
   </section>
 
@@ -914,6 +923,7 @@ tr:nth-child(even) td{background:#0e1523;}
       <li data-k="s2"><span class="box">✓</span><span class="tx"><b>Ask</b> 问一句："这个项目/文件夹里都有什么？"</span></li>
       <li data-k="s3"><span class="box">✓</span><span class="tx">用 <b>Agent</b> 做个小改动，<b>点开文件核对</b>；不对就撤销</span></li>
       <li data-k="s4"><span class="box">✓</span><span class="tx">对话里试一次 <code>@某文件</code> 提问</span></li>
+      <li data-k="s4b"><span class="box">✓</span><span class="tx">选中一段文字，试 <b>Add to Chat</b>（<span class="kbd">Ctrl+L</span>）和 <b>Add to Side Chat</b>（<span class="kbd">Ctrl+Shift+S</span>）</span></li>
       <li data-k="s5"><span class="box">✓</span><span class="tx">（可选）<span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗ 切到 IDE，再切回 Window</span></li>
       <li data-k="s6"><span class="box">✓</span><span class="tx">把你一件<b>重复的活</b>写成 Skill 草稿</span></li>
       <li data-k="s7"><span class="box">✓</span><span class="tx">完成一次 <b>Commit + Push</b> 到 GitHub</span></li>
@@ -925,6 +935,7 @@ tr:nth-child(even) td{background:#0e1523;}
 大事 / 多步骤    →  Plan → 再 Agent 执行
 做功能 / 改多文件 →  Agent（改完点开文件核对）
 对不上 / 查不清 →  Debug（先查再改）
+指一小段文字    →  选中 → Add to Chat（Ctrl+L）/ Side Chat（Ctrl+Shift+S）
 重复的活         →  写成 Skill，一句话触发
 自己改几个字     →  （补充）Ctrl+Shift+N / 右上角 IDE↗ → Tab / Ctrl+K
 缺辅助软件       →  Ask 清单 → 确认后再装 → python/git --version
