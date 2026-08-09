@@ -127,6 +127,14 @@ table{width:100%;border-collapse:collapse;margin:12px 0;font-size:var(--fs-sm);}
 th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;}
 th{background:#101a2c;color:var(--ink);font-weight:700;}
 tr:nth-child(even) td{background:#0e1523;}
+table.tech-use{table-layout:fixed;}
+table.tech-use th{text-align:center;vertical-align:middle;}
+table.tech-use td:first-child{text-align:center;vertical-align:middle;font-weight:700;}
+table.tech-use col.c-scene{width:9%;}
+table.tech-use col.c-job{width:17%;}
+table.tech-use col.c-say{width:40%;}
+table.tech-use col.c-mode{width:14%;}
+table.tech-use col.c-check{width:20%;}
 
 /* 步骤块 */
 .steps{counter-reset:s;margin:12px 0;padding:0;list-style:none;}
@@ -393,7 +401,7 @@ tr:nth-child(even) td{background:#0e1523;}
       <div class="grp">收尾</div>
       <a data-tab="start"><span class="no">08</span><span>能做什么 · 上手带走</span></a>
       <div class="grp">拓展</div>
-      <a data-tab="explore"><span class="no">09</span><span>课后拓展 · 继续探索</span></a>
+      <a data-tab="explore"><span class="no">09</span><span>拓展 · 继续探索</span></a>
     </nav>
   </aside>
 
@@ -469,7 +477,7 @@ tr:nth-child(even) td{background:#0e1523;}
         <div class="t">06</div><div class="c">安全与把关：Review、回退（拒收 / Ctrl+Z / Git）、隐私</div>
         <div class="t">07</div><div class="c">配合 GitHub：建仓库、源代码管理、Commit/Push、Pages</div>
         <div class="t">08</div><div class="c">上手清单 + 资源</div>
-        <div class="t">09</div><div class="c">课后拓展：自己点一点界面上还没用过的功能</div>
+        <div class="t">09</div><div class="c">拓展：后续深入挖、做成可演示的专题</div>
       </div>
     </div>
 
@@ -912,13 +920,56 @@ tr:nth-child(even) td{background:#0e1523;}
       <span class="en">Use cases &amp; your first-day checklist</span>
     </h1>
 
-    <h2><span class="dot"></span>不写代码的人，能用它干这些</h2>
-    <p style="font-size:var(--fs-sm);color:var(--muted)">与第 00 章「产出物地图」对应，方便对照练习：</p>
-    <div class="grid g2">
-      <div class="card" style="margin:0"><b>重复表单 / 文档</b><p style="font-size:var(--fs-sm)">箱单、报价、周报、纪要——做成 Skill，一句话跑完（第 05 章）。</p></div>
-      <div class="card" style="margin:0"><b>数据看板</b><p style="font-size:var(--fs-sm)">Excel/数据 → Canvas 交互看板，一句话加环比、改月份（第 04 章）。</p></div>
-      <div class="card" style="margin:0"><b>查资料 / 整理</b><p style="font-size:var(--fs-sm)"><code>@Web</code> 查规定、整理纪要、翻译润色；扫描件可配合 OCR（第 01 章工具链）。</p></div>
-      <div class="card" style="margin:0"><b>网页 / 小工具</b><p style="font-size:var(--fs-sm)">教学页、内部小工具——像这份课件；公网/手机访问后文再专讲。</p></div>
+    <h2><span class="dot"></span>日常提效</h2>
+    <p style="font-size:var(--fs-sm);color:var(--muted)">重复劳动与前面章节练过的用法，对照即可：</p>
+    <ul style="font-size:var(--fs-sm)">
+      <li><b>重复劳动 / 小脚本</b>：发票按月整理、下载件重命名归档、批量更新报表——用大白话描述规则，让它写脚本或一步步改文件；跑完抽查几份（可配合第 01 章 Python）。</li>
+      <li><b>箱单 / 重复表单</b>：做成 Skill，一句话跑完（第 05 章）。</li>
+      <li><b>数据看板</b>：Excel → Canvas，一句话加环比、改月份（第 04 章）。</li>
+      <li><b>查资料 / 纪要</b>：<code>@Web</code>、整理要点；扫描件配合 OCR（第 01 章工具链）。</li>
+      <li><b>网页 / 培训页</b>：像本课件这样的本地 HTML；公网/手机访问见拓展。</li>
+    </ul>
+
+    <div class="speak">
+      <div class="h">🎤 讲解要点</div>
+      收尾对准<strong>技术人员</strong>三条线：<b>售前</b>（选型配置 / 方案）→ <b>执行</b>（设计输入与项目资料）→ <b>项目审阅</b>（对照 BOM / 图纸 / 装箱要求出问题清单）。强调开口说清依据、选对模式、发出前核对。日常提效对照前面章节。
+    </div>
+
+    <h2><span class="dot"></span>技术人员：售前 · 执行 · 项目审阅</h2>
+    <table class="tech-use">
+      <colgroup>
+        <col class="c-scene" /><col class="c-job" /><col class="c-say" /><col class="c-mode" /><col class="c-check" />
+      </colgroup>
+      <tr><th>场景</th><th>典型活</th><th>可以这样跟它说（示例）</th><th>模式</th><th>你必须核对</th></tr>
+      <tr>
+        <td>售前</td>
+        <td>工艺/工况梳理；机型选型与配置表；技术方案与接口条件（电/气/通讯/安装）；风险与待澄清项</td>
+        <td><code>@客户工况/工艺说明</code> <code>@历史机型配置</code> <code>@公司标准机型库</code>：梳理产能、节拍、介质与联锁要求；出机型选型结论 + 配置表（主控/驱动/气路/安全回路等）+ 方案要点；电制、气源压力、通讯协议、安装空间、地基荷载、备件范围等<strong>待澄清项单列</strong>；风险（交货期、非标、认证）单独成节，无依据不写进正式稿</td>
+        <td>Ask 摸底 → Plan 对齐范围 → Agent 出稿</td>
+        <td>选型与配置是否覆盖工况与联锁；型号/数量/品牌替代是否有标准机型或历史项目依据；接口条件（电/气/通讯/安装）是否写全；待澄清与风险是否漏项；对外交期与承诺边界是否越权</td>
+      </tr>
+      <tr>
+        <td>执行</td>
+        <td>设计输入与任务书；资料/接口/点表清单；BOM 与外购件跟踪；过程纪要、设计变更与版本说明</td>
+        <td><code>@开工会纪要</code> <code>@合同/技术协议要点</code> <code>@公司模板</code>：整理设计输入与任务书；列资料/接口/I/O 点表清单（责任方、节点、状态）；按项目号跟踪 BOM 与长周期外购件；过程纪要、设计变更单与版本说明字段与现项目命名一致，缺项标「待补」</td>
+        <td>Agent<br>（模板明确时）</td>
+        <td>设计输入是否覆盖协议与纪要要点；清单字段（责任方/节点/状态）是否齐全；项目号、设备位号、I/O 点名是否与主数据一致；BOM/外购件关键项是否列入跟踪；变更与版本号是否可追溯</td>
+      </tr>
+      <tr>
+        <td>项目审阅</td>
+        <td>图册/原理图/接线图交叉核对；BOM 与图纸一致性；装箱/唛头/危险品标识；输出问题清单与闭环建议</td>
+        <td><code>@图册/原理图/接线图</code> <code>@BOM</code> <code>@装箱要求/唛头</code>：交叉核对图号、位号、线号与数量；查 BOM 与图纸一致性；查装箱箱位、唛头前缀、危险品/电池标识；只出审阅意见（定位到图号/页/位号/行号 + 建议与闭环人），<strong>先不改原图原表</strong></td>
+        <td>Ask 出意见<br>或 Agent 只写意见稿</td>
+        <td>每条问题能否指回图号/页/位号或 BOM 行；原理图—接线图—BOM 数量是否闭环；箱号前缀与箱位是否与装箱/唛头一致；危险品标识是否遗漏；争议项内部确认后再外发</td>
+      </tr>
+    </table>
+    <div class="callout warn"><div class="h">⚠️ 技术岗纪律</div>
+      <ul style="margin:6px 0 0;padding-left:1.2em;font-size:var(--fs-sm)">
+        <li>对外发出的配置、方案、审图意见，须<strong>本人核对</strong>并按公司规定完成审核后再发送。</li>
+        <li>无图纸、BOM、企业标准或可追溯历史依据的数字与承诺，<strong>不得写入正式稿</strong>。</li>
+        <li>审阅默认只输出问题清单与建议；<strong>未经授权不修改</strong>原图、原表。</li>
+        <li>Cursor 仅辅助起草与查错，<strong>不替代</strong>签字、会签与终审责任。</li>
+      </ul>
     </div>
 
     <h2><span class="dot"></span>新人第一天练习清单（点一下打勾）</h2>
@@ -929,6 +980,8 @@ tr:nth-child(even) td{background:#0e1523;}
       <li data-k="s3"><span class="box">✓</span><span class="tx">用 <b>Agent</b> 做个小改动，<b>点开文件核对</b>；不对就撤销</span></li>
       <li data-k="s4"><span class="box">✓</span><span class="tx">对话里试一次 <code>@某文件</code> 提问</span></li>
       <li data-k="s4b"><span class="box">✓</span><span class="tx">选中一段文字，试 <b>Add to Chat</b>（<span class="kbd">Ctrl+L</span>）和 <b>Add to Side Chat</b>（<span class="kbd">Ctrl+Shift+S</span>）</span></li>
+      <li data-k="s4c"><span class="box">✓</span><span class="tx">（技术）用 Ask：对一段说明/BOM 摘录列出 <b>3 条具体问题 + 建议</b>（先别改原件）</span></li>
+      <li data-k="s4d"><span class="box">✓</span><span class="tx">（技术）用 Plan：根据参数要点出一版<strong>配置清单 + 待确认项</strong>（数字自己核）</span></li>
       <li data-k="s5"><span class="box">✓</span><span class="tx">（可选）<span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗ 切到 IDE，再切回 Window</span></li>
       <li data-k="s6"><span class="box">✓</span><span class="tx">把你一件<b>重复的活</b>写成 Skill 草稿</span></li>
       <li data-k="s7"><span class="box">✓</span><span class="tx">完成一次 <b>Commit + Push</b> 到 GitHub</span></li>
@@ -969,25 +1022,25 @@ tr:nth-child(even) td{background:#0e1523;}
     <div class="callout ok" style="margin-top:20px"><div class="h">🎉 结语</div>Cursor 会一直更新，按钮名字也可能变，但主线不变：<b>Agents Window 里 Ask 问清 → Plan 对齐 → Agent 执行 → 点开核对（不对就撤销）</b>，重复的活交给 <b>Skill</b>。切 IDE 用 <span class="kbd">Ctrl+Shift+N</span> 或右上角 IDE↗。课件可课后精读，<b>亲手练一遍</b>最牢。</div>
   </section>
 
-  <!-- ============ 09 课后拓展 ============ -->
+  <!-- ============ 09 拓展 ============ -->
   <section id="explore">
     <span class="eyebrow">09 · 拓展</span>
-    <h1>课后拓展：多点一点，自己挖好用的功能
-      <span class="en">Explore further · keep digging after class</span>
+    <h1>拓展：主线之外，后续会深入挖的专题
+      <span class="en">Explore · deepen topics after the core track</span>
     </h1>
-    <p class="lead">本场主线到第 08 章就够上手。Cursor <b>一直在更新</b>，界面上还有不少入口（例如 Cloud、No Repo、以及你还没点过的菜单）——本场不展开，留给课后按自己的工作需要去试。</p>
+    <p class="lead">主线（00–08）先把人带会上手；本区是<strong>持续更新的蓄水池</strong>——Cloud、No Repo、MCP、以及界面上还没用过的能力，不是一笔带过，而是后面要<strong>逐个研究清楚、做成可演示内容</strong>再补进来。课件会少大翻主线，多在这里加厚。</p>
 
-    <h2><span class="dot"></span>怎么自学这些「还没用过」的功能</h2>
+    <h2><span class="dot"></span>怎么往这里加内容（维护约定）</h2>
     <ul style="font-size:var(--fs-sm)">
-      <li>看官方 <a href="https://cursor.com/changelog" target="_blank">Changelog</a> 和 <a href="https://docs.cursor.com" target="_blank">文档</a>：新按钮往往先出现在更新说明里。</li>
-      <li>在 Agents Window 里<b>只读地逛一逛</b>：点开不熟悉的入口，先 Ask「这个是干什么的？我会不会误改文件？」再决定用不用。</li>
-      <li>挖到对自己有用的（省时间、少出错），记进自己的笔记或做成 Skill——比一次记全菜单更有用。</li>
+      <li>看官方 <a href="https://cursor.com/changelog" target="_blank">Changelog</a> 和 <a href="https://docs.cursor.com" target="_blank">文档</a>，结合自己业务场景选题。</li>
+      <li>先 Ask 弄清「干什么、会不会动文件」，再动手试；挖通后写成「讲什么 + 怎么演示 + 练习」补进本区或独立成节。</li>
+      <li>挖到对公司有用的，固化成笔记或 Skill——比一次记全菜单更有用。</li>
     </ul>
-    <div class="callout info"><div class="h">和主线的关系</div>主线（Ask → Plan → Agent → 核对 → Skill → GitHub）先练熟；拓展区是「以后工作中慢慢加武器」，不是今天必须讲完的清单。</div>
+    <div class="callout info"><div class="h">和主线的关系</div>主线（Ask → Plan → Agent → 核对 → Skill → GitHub）保持稳定、少大翻；拓展区按专题加深，一项项做实，不要求第一次培训讲完。</div>
 
     <div class="speak">
       <div class="h">🎤 讲解要点</div>
-      收尾后留 1 分钟即可：指出界面还会变、有些入口本场没点；鼓励同事课后自己试，试之前先 Ask 问清用途。不必现场展开 Cloud / No Repo 等名词。
+      点明：08 收尾后还有拓展区；今天可不展开具体名词，但要告诉同事——这里会持续补「研究透 + 能演示」的专题，不是略过不学。
     </div>
   </section>
 
