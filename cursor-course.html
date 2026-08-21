@@ -658,13 +658,14 @@ table.tech-use col.c-check{width:20%;}
     <div class="demo" data-scenario="atMention"></div>
 
     <table>
-      <tr><th>@ 什么</th><th>例子</th><th>作用 / 会得到什么</th></tr>
-      <tr><td><code>@文件</code></td><td><code>@周报.md</code></td><td>让它重点看这个文件，回答/修改都基于它（最常用）</td></tr>
-      <tr><td><code>@文件夹</code></td><td><code>@助手生成文件/</code></td><td>限定在某个目录里找、改，不乱翻别处</td></tr>
-      <tr><td><code>@Web</code></td><td><code>@Web 2026 最新报关要求</code></td><td>若列表里有：联网搜资料；没有就用浏览器查完再把要点贴进对话</td></tr>
-      <tr><td>拖入图片 / PDF</td><td>截图、扫描件、说明书 PDF</td><td>照着图做、从扫描件抽文字要点（复杂扫描可配合 OCR 工具）</td></tr>
+      <tr><th>怎么指</th><th>例子</th><th>作用 / 会得到什么</th></tr>
+      <tr><td>输入 <code>@文件</code></td><td><code>@周报.md</code></td><td>让它重点看这个文件（多半先列<strong>当前项目</strong>里的）</td></tr>
+      <tr><td>输入 <code>@文件夹</code></td><td><code>@助手生成文件/</code></td><td>限定在某个目录里找、改，不乱翻别处</td></tr>
+      <tr><td>输入框 <b>+</b> → <b>File</b></td><td>选本机任意路径的文件/文件夹</td><td>可引用<strong>当前项目以外</strong>的位置，效果同挂上 @file</td></tr>
+      <tr><td>拖进对话框</td><td>截图、PDF、其它盘的文件</td><td>同样常能跨文件夹；图片/扫描件可配合 OCR</td></tr>
+      <tr><td><code>@Web</code></td><td><code>@Web 2026 最新报关要求</code></td><td>若列表里有：联网搜资料；没有就浏览查完再贴要点</td></tr>
     </table>
-    <div class="callout info"><div class="h">小提示</div>不确定文件名时：先 Ask「这个文件夹里跟周报相关的文件有哪些？」再对点名的文件打 <code>@</code>。也可以从资源管理器把文件<b>拖进对话框</b>，效果类似 @。<br>用 Agent 改完后：<b>点开被改的文件核对一眼</b>（现版常直接写入，见第 02 章）。</div>
+    <div class="callout info"><div class="h">小提示</div>对话框里打 <code>@</code>：方便点当前话题文件夹里的文件。要引用<strong>别的文件夹</strong>：优先输入框左侧 <b>+</b> → <b>File</b>，或直接把文件/文件夹<strong>拖进对话框</strong>。<br>不确定文件名时：先 Ask「这个文件夹里跟周报相关的有哪些？」再 @ 或 + File。<br>用 Agent 改完后：<b>点开被改的文件核对一眼</b>（现版常直接写入，见第 02 章）。</div>
 
     <h2><span class="dot"></span>第二招：选中一段话 → Add to Chat / Side Chat</h2>
     <p style="font-size:var(--fs-sm)">在 Agents Window 打开的文件或预览里，用鼠标<strong>选中一段文字</strong>，上方会出现工具条（不用先复制）：</p>
@@ -1067,9 +1068,55 @@ table.tech-use col.c-check{width:20%;}
     </ul>
     <div class="callout info"><div class="h">和主线的关系</div>主线（Ask → Plan → Agent → 核对 → Skill → GitHub）保持稳定、少大翻；拓展区按专题加深，一项项做实，不要求第一次培训讲完。</div>
 
+    <h2><span class="dot"></span>专题备忘：Git（本地）和 GitHub（网上）别混</h2>
+    <p class="lead" style="font-size:var(--fs-sm)">第 07 章练的是「配合 GitHub」。同事常问：<b>Git 仓库</b>和 <b>GitHub</b> 是不是一回事？一句话：<span class="mark">Git ≈ 本机上的版本本子；GitHub ≈ 网上的备份柜</span>。Cursor 要「按项目挂对话」，也常要求文件夹是一个 Git 仓库（本机有隐藏的 <code>.git</code>），不等于已经上传到网上。</p>
+
+    <table>
+      <tr><th></th><th>Git（本地仓库）</th><th>GitHub（网上仓库）</th></tr>
+      <tr>
+        <td><b>是什么</b></td>
+        <td>装在电脑上的<strong>版本管理工具</strong>；文件夹里有 <code>.git</code>，就算本地仓库</td>
+        <td>网站/云服务（<a href="https://github.com" target="_blank">github.com</a>），用来<strong>存放、备份、分享</strong>仓库</td>
+      </tr>
+      <tr>
+        <td><b>数据在哪</b></td>
+        <td>在你硬盘里（项目旁的 <code>.git</code>）</td>
+        <td>在互联网上的远程仓库</td>
+      </tr>
+      <tr>
+        <td><b>日常动作</b></td>
+        <td><b>Commit</b>：记一笔「改了什么」（还在本地）</td>
+        <td><b>Push</b>：把已 Commit 的内容<strong>上传</strong>到网上</td>
+      </tr>
+      <tr>
+        <td><b>没网能不能用</b></td>
+        <td>能：本地提交、回退都不用网</td>
+        <td>上传/下载要网；Push 失败多半是网络问题</td>
+      </tr>
+      <tr>
+        <td><b>占空间吗</b></td>
+        <td>仓库本身通常不大；若把大量 PDF/Excel 反复提交进 Git，才会明显变大（可用 <code>.gitignore</code> 忽略）</td>
+        <td>云端也有容量限制；个人公开/私有仓库个人使用一般够用</td>
+      </tr>
+      <tr>
+        <td><b>和 Cursor</b></td>
+        <td>打开文件夹、按项目归对话、本地回退，常依赖「这是一个 Git 仓库」</td>
+        <td>备份、换电脑同步、可选 Pages 挂网页链接（第 07 章）</td>
+      </tr>
+    </table>
+
+    <div class="callout ok"><div class="h">✅ 记两句就够</div>
+      <ul style="margin:6px 0 0;padding-left:1.2em;font-size:var(--fs-sm)">
+        <li><b>Git</b> = 本地仓库（本机记账、可回退）</li>
+        <li><b>GitHub</b> = 网上仓库（云端备份柜；同类还有 GitLab、Gitee 等）</li>
+        <li>只有本地 Git、<b>从没 Push</b> → 文件<strong>还没</strong>上到网上，别人/别的电脑看不到</li>
+      </ul>
+    </div>
+    <div class="callout warn"><div class="h">⚠️ 和业务文件夹的关系</div>给项目文件夹 <code>git init</code>（建成本地仓库），是为了让 Cursor/版本管理认这个项目；<strong>不是</strong>自动把周报、PDF 全部公开。要不要上传，由你是否 <b>Push</b>、仓库选 Public 还是 Private 决定。</div>
+
     <div class="speak">
       <div class="h">🎤 讲解要点</div>
-      点明：08 收尾后还有拓展区；今天可不展开具体名词，但要告诉同事——这里会持续补「研究透 + 能演示」的专题，不是略过不学。
+      先答清：Git 本地、GitHub 网上。再补：Cursor「挂项目」要的是本地 <code>.git</code>；第 07 章的 Commit/Push 才是连上 GitHub。拓展区可后续再挖分支、协作 PR 等，本场不必展开。
     </div>
   </section>
 
